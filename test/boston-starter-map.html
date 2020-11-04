@@ -1,0 +1,154 @@
+
+<html>
+<head>
+    <title>A Basic D3 map</title>
+    <script src="http://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+    <script src="data/ZIP_Codes.geojson"></script>
+</head>
+<body>
+    <h1></h1>
+    <script>
+
+    var width = 700;
+    var height = 580;
+
+    var svg = d3.select( "body" )
+        .append( "svg" )
+        .attr( "width", width )
+        .attr( "height", height );
+
+    var g = svg.append("g");
+
+    var title = d3.select("h1")
+        .style("font-size", "24px")
+        
+    
+    var albersProjection = d3.geoAlbers()
+        .scale( 190000 )
+        .rotate( [71.057,0] )
+        .center( [0, 42.313] )
+        .translate( [width/2,height/2] );
+
+    var geoPath = d3.geoPath()
+        .projection( albersProjection );
+
+    d3.csv("data/shape_with_stops.csv").then(function(stop){
+        stop = stop.filter(d => +d.resident_employee_ratio >=1)
+
+        ZIP_Codes_json.features.forEach(f => {
+            stop.forEach(d => {
+                if (d.zip.slice(-5) == f.properties.ZIP5){
+                        f.properties.total_population = +d["population"]
+                        f.properties.black_pop = +d["black_pop"]
+                        f.properties.white_pop = +d["white_pop"]
+                        f.properties.percent_black = +d["%black"]
+                        f.properties.percent_white = +d["%white"]
+                        f.properties.num_of_stop = +d["num_of_stops"]
+                        f.properties.stops_per = +d["stops_per"]
+                        f.properties.per_black_stopped_within_blacks = +d["per_black_stopped_within_blacks"]
+                        f.properties.per_white_stopped_within_whites = +d["per_white_stopped_within_whites"]
+                        f.properties.per_stopped_black_to_white = +d["per_stopped_black_to_white"]     
+                        f.properties.crime = +d["crime"]     
+                }
+            })
+        })
+        // console.log(ZIP_Codes_json.features)
+        function generateBiMap(columnName1, columnName2, titleText){
+            const selData1 = ZIP_Codes_json.features.slice().sort((a, b) => ((+a.properties[columnName1]) - (+b.properties[columnName1])))
+            const minNum1 = d3.quantile(selData1.map(d => d.properties[columnName1]), 0.3)
+            const mediumNum1 = d3.median(selData1.map(d => d.properties[columnName1]))
+            const maxNum1 = d3.quantile(selData1.map(d => d.properties[columnName1]), 0.6)
+
+            const selData2 = ZIP_Codes_json.features.slice().sort((a, b) => ((+a.properties[columnName2]) - (+b.properties[columnName2])))
+            const minNum2 = d3.quantile(selData2.map(d => d.properties[columnName2]), 0.3)
+            const mediumNum2 = d3.median(selData2.map(d => d.properties[columnName2]))
+            const maxNum2 = d3.quantile(selData2.map(d => d.properties[columnName2]), 0.6)
+
+            console.log(minNum2, maxNum2)
+            
+            const percentScale1 = d3.scaleThreshold()
+            // .domain([minNum1, mediumNum1, maxNum1])
+            .domain([minNum1, maxNum1])
+            .domain([0.33, 0.66])
+            .range(['low', 'medium', 'high'])
+            const percentScale2 = d3.scaleThreshold()
+            .domain([minNum2, maxNum2])
+            .range(['low', 'medium', 'high'])
+
+            const bivariateColorScale = d3.scaleOrdinal()
+                .domain([
+                    'high high',
+                    'high medium',
+                    'high low',
+                    'medium high',
+                    'medium medium',
+                    'medium low',
+                    'low high',
+                    'low medium',
+                    'low low'
+                ])
+                .range([
+                    '#3F2949', // high prop1, high prop2
+                    '#435786',
+                    '#4885C1', // high prop1, low prop2
+                    '#77324C',
+                    '#806A8A', // medium prop1, medium prop2
+                    '#89A1C8',
+                    '#AE3A4E', // low prop1, high prop2
+                    '#BC7C8F',
+                    '#CABED0' // low prop1, low prop2
+                ])
+            
+            g.selectAll( "path" )
+            .data( ZIP_Codes_json.features )
+            .enter()
+            .append( "path" )
+            .attr("fill", d => {
+                if (d.properties.hasOwnProperty(columnName1) || d.properties.hasOwnProperty(columnName2)){
+                    const prop1 = percentScale1(d.properties[columnName1])
+                    const prop2 = percentScale2(d.properties[columnName2])
+                    return bivariateColorScale(`${prop1} ${prop2}`)
+                }else{
+                    return "rgba(0,0,0,.2)"
+                }
+            })
+            .attr( "stroke", "#ccc")
+            .attr( "d", geoPath );
+
+            title.html(titleText);
+        }
+
+        function generateMap(columnName, titleText, color, min=0, max=1){
+
+            const colorScale = d3.scaleLinear()
+            .domain(d3.extent(ZIP_Codes_json.features, d => d.properties[columnName]))
+            .range(['white', color])
+
+            g.selectAll( "path" )
+            .data( ZIP_Codes_json.features )
+            .enter()
+            .append( "path" )
+            .attr("fill", d => {
+                if (d.properties.hasOwnProperty(columnName)){
+                    return colorScale(d.properties[columnName])
+                } else {
+                    return "rgba(0,0,0,0.2)"
+                }
+            })
+            .attr( "stroke", "#333")
+            .attr( "d", geoPath );
+
+            title.html(titleText);
+        }
+
+
+        generateBiMap("percent_white", "per_black_stopped_within_blacks", "stops per 100 residents vs chances of being stopped by the police if you're Black")
+        //  generateMap("per_white_stopped_within_whites", "Stopped whites per 100 white residents", "blue")
+        
+    })
+
+       
+
+    </script>
+</body>
+</html>
