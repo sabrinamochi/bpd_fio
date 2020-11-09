@@ -19,6 +19,58 @@
 
 		{{> story/intro }}
 
+		<section class="warren">
+			{{> story/warren}}
+		</section>
+
+		<section class='fio-explain'>
+			{{> story/fio-explain}}
+		</section>
+
+		<section class='declined'>
+			{{> story/declined}}
+		</section>
+
+		<section class='black'>
+			{{> story/black}}
+		</section>
+
+		<section class='support-fio'>
+			{{> story/support-fio}}
+		</section>
+
+		<section class='scatter-section'>
+			{{> story/scatter}}
+		</section>
+
+		<section class='map-section'>
+			{{> story/map}}
+		</section>
+
+		<section class='select-person-section'>
+			{{> story/select-person}}
+		</section>
+
+		<section class='large-black-conclusion'>
+			{{> story/large-black}}
+		</section>
+
+		<section class='by-race'>
+			{{> story/stop-by-race}}
+		</section>
+
+		<section class='by-race-conclusion-section'>
+			{{> story/by-race-conclusion}}
+		</section>
+
+		<section id='conclude'>
+			{{#each doc.conclude}}
+				<div>
+					<p>{{value}}</p>
+				</div>
+			{{/each}}
+		</section>
+
 	</main>
 
 	{{> base/footer }}

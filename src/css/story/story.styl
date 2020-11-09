@@ -1,1 +1,209 @@
 /* CUSTOM STORY STYLE */
+
+/* Device media queries */
+tablet = "(min-width: 768px) and (max-width: 979px)"
+phone = "(max-width: 767px)"
+
+#content
+    line-height 24px
+
+h3 
+    font-family $sans
+
+#warren-scroll 
+    position relative
+    .scroll__img
+        height 100vh
+        position sticky
+        position -webkit-sticky
+        top 0
+        margin 0 auto
+        // width $column-width
+        img
+            height 100%
+            object-fit cover
+    .scroll__text
+        max-width $scroll-column-width
+        margin 0 auto
+        position relative
+    .step 
+        height 100vh
+        p
+            background-color rgba(255,255,255,1)    
+            padding 1rem 
+            box-shadow 2px 2px 3px rgba(0,0,0,0.8)
+    @media phone
+        .scroll__img
+            height 100vh
+            img 
+                height 100%
+                object-fit cover
+                object-position center
+        .scroll__text
+            width 90%
+
+#fio-explain 
+    max-width $column-width
+    margin 2rem auto
+    @media phone
+        width 90%
+
+#declined
+        .subject-num
+            path 
+                fill none
+                stroke rgba(0,0,0,0.5)
+                stroke-width 3px
+        .subject-num-circle
+            fill rgba(255,255,255,1)
+            stroke rgba(0,0,0,0.5)
+        
+#black
+    .graphic
+        .stacked-bar-title
+            font-family $sans
+        .stacked-bar-legend
+            font-family $sans
+            font-size 12px
+            fill rgba(0,0,0,0.6)
+
+#scatter
+    position relative
+    .scroll__graphic
+        position sticky
+        position -webkit-sticky
+        top 10rem
+    .tip 
+        position: absolute;
+        border: 1px solid steelblue;
+        visibility: hidden;
+     .scroll__text
+        max-width $scroll-column-width
+        margin 0 auto
+        position relative
+    .step 
+        height 100vh
+        p
+            background-color rgba(255,255,255,1)    
+            padding 1rem 
+            box-shadow 2px 2px 3px rgba(0,0,0,0.5)
+
+#map 
+    .graphic-container
+        display flex
+        justify-content center
+        align-items center
+        .arrow
+            height fit-content
+            font-size 25px
+            cursor pointer
+        .arrow-bounce
+            -webkit-animation bounce .3s infinite alternate;
+            -moz-animation bounce .3s infinite alternate;
+            animation bounce .5s infinite alternate;
+                
+            @keyframes bounce {
+                to { transform: scale(1.2); }
+            }
+            
+
+#select-person
+    position relative
+    .result
+        display none
+        .step 
+            position relative
+            height 60vh
+            p
+                background-color rgba(255,255,255,1)    
+                padding 1rem 
+                box-shadow 2px 2px 3px rgba(0,0,0,0.5)
+        .overall-boston
+            opacity 0
+    .assigned-person
+        font-size 50px
+        width 80%
+        line-height 1.5
+    .sticky-div
+        position sticky
+        position -webkit-sticky
+        top 8rem
+        margin 0 auto 5rem
+        .graphic 
+            display none
+    .button-group
+        display flex
+        justify-content space-between
+        margin 3rem 0
+        button
+            width 45%
+            height 3rem
+            opacity 0.5
+            box-shadow 2px 2px 3px rgba(0,0,0,0.5)
+        button:hover
+            opacity 0.8
+    .selected-neiborhood
+        color #FF9356
+
+#large-black, #by-race-conclusion
+    display none
+    .graphic
+        display grid
+        grid-template-columns repeat(4, 1fr)
+        .black-stop-chart-title
+            font-size 12px
+            text-align center
+
+#stop-by-race  
+    display none
+    position relative
+    .sticky-div
+        position sticky
+        position -webkit-sticky
+        top 8rem
+        margin 0 auto 5rem
+    .result
+        .step 
+            position relative
+            height 60vh
+            p
+                background-color rgba(255,255,255,1)    
+                padding 1rem 
+                box-shadow 2px 2px 3px rgba(0,0,0,0.5)
+#conclude
+    display none
+
+.white-color
+    color #F8DF69
+.white-pop-color
+    color rgba(148, 139, 191, 1)
+.black-color
+    color #81A8AD
+.selected-person
+    opacity 1
+    background-color rgba(0,0,0,0.9)
+    color rgba(255,255,255,1)
+    
+.step, #scatter .scroll__text
+    pointer-events none
+        
+.graphic, .scroll__graphic
+        margin 3rem auto
+        width 100%
+svg
+    .axis
+        .domain
+            stroke rgba(0,0,0,0.8)
+        .tick line
+            opacity 0
+        .tick text
+            fill rgba(0,0,0,0.8)
+    .label
+        font-family $sans
+        font-size 12px
+
+#black, #suppor-fio, #declined, #scatter, #map, #select-person, #large-black, #stop-by-race, #by-race-conclusion, #conclude
+    max-width $column-width
+    margin 0 auto
+    @media phone
+        width 90%

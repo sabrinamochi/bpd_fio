@@ -72,7 +72,7 @@ function recircHTML() {
     .map(createLink)
     .join("");
 
-  d3.select(".pudding-footer .footer-recirc__articles").html(html);
+  // d3.select(".pudding-footer .footer-recirc__articles").html(html);
 }
 
 function init() {

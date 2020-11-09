@@ -9,7 +9,10 @@
   },
   "dependencies": {
     "lodash.debounce": "^4.0.8",
-    "nouislider": "14.2.0"
+    "nouislider": "14.2.0",
+    "scrollama": "^2.2.1",
+    "simple-statistics": "^7.3.2",
+    "topojson": "^3.0.2"
   },
   "devDependencies": {
     "archieml": "0.4.2",

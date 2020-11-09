@@ -2,7 +2,15 @@
 import debounce from "lodash.debounce";
 import isMobile from "./utils/is-mobile";
 import linkFix from "./utils/link-fix";
+import images from "./images";
 import graphic from "./graphic";
+import graphicDeclined from "./graphic-declined";
+import graphicStackedBars from "./graphic-stackedbars";
+import graphicScatter from "./graphic-scatter";
+import graphicMaps from "./graphic-maps";
+import selectPerson from "./select-person";
+import graphicBlackstop from "./graphic-blackstop";
+import graphicByRace from "./graphic-byRace";
 import footer from "./footer";
 
 const $body = d3.select("body");
@@ -14,7 +22,14 @@ function resize() {
   const width = $body.node().offsetWidth;
   if (previousWidth !== width) {
     previousWidth = width;
-    graphic.resize();
+    graphicDeclined.resize();
+    graphicStackedBars.resize();
+    graphicScatter.resize();
+    graphicMaps.resize();
+    selectPerson.resize();
+    graphicBlackstop.resize();
+    graphicByRace.resize()
+
   }
 }
 
@@ -40,8 +55,16 @@ function init() {
   window.addEventListener("resize", debounce(resize, 150));
   // setup sticky header menu
   setupStickyHeader();
+  // kick off images code
+  images.init();
   // kick off graphic code
-  graphic.init();
+  graphicDeclined.init();
+  graphicStackedBars.init();
+  graphicScatter.init();
+  graphicMaps.init();
+  selectPerson.init();
+  graphicBlackstop.init();
+  graphicByRace.init()
   // load footer stories
   footer.init();
 }

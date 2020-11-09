@@ -1,0 +1,12 @@
+<div id='warren-scroll'>
+    <div class='scroll__img'>
+        <img class='warren-img'>
+    </div>
+    <div class='scroll__text'>
+        {{#each doc.warrenSteps}}
+            <div class='step' data-step='{{step}}'>
+                <p>{{text}}</p>
+            </div>
+        {{/each}}
+    </div>
+</div>

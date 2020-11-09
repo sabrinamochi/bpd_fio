@@ -1,4 +1,5 @@
 /* global d3 */
+
 function resize() {}
 
 function init() {

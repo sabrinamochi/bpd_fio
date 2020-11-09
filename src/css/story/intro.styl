@@ -1,27 +1,35 @@
 .intro
 	margin 0 auto
 	padding 6rem 1rem 3rem 1rem
-
-	&__hed
-		max-width 60rem
-		margin 0 auto
-		text-align center
+	height 100vh
+	display grid
+	justify-content center
+	align-items center
+	background-color black
+	color rgba(255,255,255,1)
+	&__text
+		a
+			color white
+		&__hed
+			max-width 60rem
+			margin 0 auto
+			text-align center
+			
+		&__dek
+			max-width $column-width
+			margin 0 auto
+			margin-top 1rem
+			text-align center
 		
-	&__dek
-		max-width $column-width
-		margin 0 auto
-		margin-top 1rem
-		text-align center
-	
-	&__byline
-		max-width $column-width
-		margin 0 auto
-		margin-top 1rem
-		text-align center
-	
-	&__time
-		display block
-		max-width $column-width
-		margin 0 auto
-		margin-top 1rem
-		text-align center
+		&__byline
+			max-width $column-width
+			margin 0 auto
+			margin-top 1rem
+			text-align center
+		
+		&__time
+			display block
+			max-width $column-width
+			margin 0 auto
+			margin-top 1rem
+			text-align center
