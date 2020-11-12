@@ -1,5 +1,6 @@
 import loadData from "./load-data"
 import scrollama from 'scrollama'
+import Stickyfill from 'stickyfilljs'
 
 // select person 
 const $div = d3.select('#select-person')
@@ -22,6 +23,7 @@ const $raceDiv = d3.select('#stop-by-race')
 const $raceParagraph = $raceDiv.select('.stop-by-race-intro').select('.paragraph p')
 const $raceResult = $raceDiv.select('.result')
 const $raceStep = $raceResult.selectAll('.step')
+const $yourWhitePop = $raceStep.select('.your-white-pop')
 const $yourRace = $raceStep.select('.your-race-in-boston')
 const $ifAnother = $raceStep.select('.if-another')
 const $raceGraphic = $raceDiv.select('.sticky-div').select('.graphic')
@@ -65,7 +67,7 @@ const STEP = {
         $gVis.select('.boston-circle')
             .attr('opacity', 1)
             .transition()
-            .duration(1000)
+            .duration(500)
             .attr('r', rScale(1))
             
         $gVis.select('.your-neighborhood-circle')
@@ -91,6 +93,12 @@ const STEP = {
 }
 
 const RACE_STEP = {
+    'your-white-pop': () => {
+        $raceGVis.select('.pop-rect')
+        .transition()
+        .duration(1000)
+        .attr('opacity', 1)
+    }, 
     'your-race-in-boston': () => {
         const rScale = getRScale()    
         const rColumn = race === "black" ? +selData[0].per_black_stopped_within_blacks : +selData[0].per_white_stopped_within_whites        
@@ -100,11 +108,6 @@ const RACE_STEP = {
             .transition()
             .duration(1000)
             .attr('r', rScale(rColumn))
-
-        $raceGVis.select('.pop-rect')
-            .transition()
-            .duration(1000)
-            .attr('opacity', 1)
             
         $raceGVis.select(`.${switchedRace}-circle`)
             .attr('opacity', 0)
@@ -121,7 +124,7 @@ const RACE_STEP = {
     }
 }
 
-function drawExplanationChart(compareTgt = 'boston', populationColumn, populationData, canvas, comparisonTgtCircleName, stopRateCircleName){
+function drawExplanationChart(selRace, compareTgt = 'boston', populationColumn, populationData, canvas, comparisonTgtCircleName, stopRateCircleName){
     canvas.selectAll('.pop-rect').remove()
     canvas.selectAll('.popu-circle').remove()
     canvas.selectAll('.boston-circle').remove()
@@ -134,21 +137,22 @@ function drawExplanationChart(compareTgt = 'boston', populationColumn, populatio
         comparisonTgtChance = 1
         stoppedChance = selData[0].stopped_per
         comparisonTgtColor = 'black'
-        stopColor = '#FF9356'
+        stopColor = '#D01E11'
         rectColor ='rgba(0,0,0,0.8)'
-    } else if (compareTgt == 'black'){
-        comparisonTgtChance = +selData[0].per_black_stopped_within_blacks
-        stoppedChance = selData[0].per_white_stopped_within_whites
-        comparisonTgtColor = '#81A8AD'
-        stopColor = '#F8DF69'
-        rectColor = 'rgba(0,0,0,0.5)'
     } else {
-        comparisonTgtChance = +selData[0].per_white_stopped_within_whites
-        stoppedChance = selData[0].per_black_stopped_within_blacks
-        comparisonTgtColor = '#F8DF69'
-        stopColor = '#81A8AD'
+        comparisonTgtChance = selData[0].per_white_stopped_within_whites
+        stoppedChance = +selData[0].per_black_stopped_within_blacks
+        comparisonTgtColor = '#2A9D8F'
+        stopColor = '#FAB038'
         rectColor = 'rgba(0,0,0,0.5)'
     }
+    // else {
+    //     comparisonTgtChance = +selData[0].per_white_stopped_within_whites
+    //     stoppedChance = selData[0].per_black_stopped_within_blacks
+    //     comparisonTgtColor = '#2A9D8F'
+    //     stopColor = '#FAB038'
+    //     rectColor = 'rgba(0,0,0,0.5)'
+    // }
     const centerR = rScale(comparisonTgtChance)
     const rectWidth = boundedWidth/4
     const populationXRange = [boundedWidth/2.5, boundedWidth/2.5+rectWidth]
@@ -232,7 +236,7 @@ function calculateStoppedChance(){
     d3.select('#conclude').style('display', 'block')
     resize()
     const raceName = race == "black" ? "Black" : "white"
-    $assignedPerson.html(`You are a ${raceName} person living in ${neighborhood}`)
+    $assignedPerson.html(`You are a ${raceName} resident living in ${neighborhood.split(", ")[0]}, ${neighborhood.split(", ")[1]}`)
     $overallBoston.style('opacity', 1)
     selData = dataset.filter(d => d.Name === neighborhood)
     black_pop = selData[0]["%black"]
@@ -240,24 +244,26 @@ function calculateStoppedChance(){
     stop_black = selData[0]["per_black_stopped_within_blacks"]
     stop_white = selData[0]["per_white_stopped_within_whites"]
     
-    drawExplanationChart('boston', "%black", black_pop, $gVis, 'boston-circle', 'your-neighborhood-circle')
+    drawExplanationChart(race, 'boston', "%black", black_pop, $gVis, 'boston-circle', 'your-neighborhood-circle')
     // STEP[currentStep]()
     
     const higherOrLower = selData[0].stopped_per - 1 > 0 ? 'higher' : 'lower'
     $blackPop
         .html(`However, since you live in ${neighborhood}, where ${Math.round(black_pop)}% of population is Black...`)
     $yourNeighborhoodChance
-        .html(`...you have a ${higherOrLower} chance - <span class='selected-neiborhood'>${Math.round(selData[0].stopped_per* 100) / 100}%</span> - of being stopped by the police.`)
+        .html(`...you have a ${higherOrLower} chance - <span class='selected-neighborhood'>${Math.round(selData[0].stopped_per* 100) / 100}%</span> - of being stopped by the police.`)
     $raceParagraph
-        .html(`Now, let’s take your race into consideration. Being ${race} does affect your chance of being stopped by the police. `)
+        .html(`Now, let’s take your race into consideration. Being ${raceName} does affect your chance of being stopped by the police. `)
+    $yourWhitePop
+        .html(`As a ${raceName} person living in ${neighborhood}, where <span class=white-pop-color>${Math.round(selData[0]["%white"])}%</span> of residents are white...`)
     const chanceWithRace = race == "black" ? Math.round(selData[0]["per_black_stopped_within_blacks"]*100)/100 : Math.round(selData[0]["per_white_stopped_within_whites"]*100)/100 
     $yourRace  
-        .html(`As a ${raceName} person living in ${neighborhood}, where <span class=white-pop-color>${Math.round(selData[0]["%white"])}%</span> of residents are white, you have a <span class=${race}-color>${chanceWithRace}%</span> chance of being stopped by the police.`)
+        .html(`...you have a <span class=${race}-color>${chanceWithRace}%</span> chance of being stopped by the police.`)
     const switchedChance = race == "black" ? Math.round(selData[0]["per_white_stopped_within_whites"]*100)/100 : Math.round(selData[0]["per_black_stopped_within_blacks"]*100/100)
     $ifAnother
-        .html(`That number changes to <span class=${switchedRace}-color>${Math.round(switchedChance)}% </span> if you’re <span class=${switchedRace}-color>${switchedRace}</span>.`)
+        .html(`That number changes to <span class=${switchedRace}-color>${Math.round(switchedChance*100)/100}% </span> if you’re <span class=${switchedRace}-color>${switchedRace}</span>.`)
     
-    drawExplanationChart(race, "%white", white_pop, $raceGVis, `${race}-circle`, `${switchedRace}-circle`)
+    drawExplanationChart(race, 'white', "%white", white_pop, $raceGVis, `white-circle`, `black-circle`)
     // RACE_STEP[currentRaceStep]()
 }
 
@@ -305,6 +311,8 @@ function handleRaceStepEnter({index, element, direction}){
 }
 
 function setupScroller(){
+    Stickyfill.add($graphic.node());
+    Stickyfill.add($raceGraphic.node());
     scroller.setup({
         step: $step.nodes(),
         offset: 0.95

@@ -22,6 +22,11 @@ let height = 0,
     boundedWidth = 0, 
     boundedHeight = 0;
 
+
+const xScale = d3.scaleBand()
+const yScale = d3.scaleLinear()
+let xAxis, yAxis;
+
 let dataset;
 
 const SEC = 1000;
@@ -48,18 +53,12 @@ function resetLine(){
 }
 
 function drawChart(){
-  const xScale = d3.scaleBand()
+  $svg.selectAll('text').remove()
+
+  xScale
     .domain(dataset.map(d => d.year))
-    .range([0, boundedWidth])
-  const yScale = d3.scaleLinear()
+  yScale
     .domain([0, d3.max(dataset, d => d.number_of_fio_subjects)])
-    .range([boundedHeight, 0])
-  const xAxis = $xAxis
-    .attr('transform', `translate(${MARGIN.left}, ${MARGIN.top + boundedHeight})`)
-    .call(d3.axisBottom(xScale))
-  const yAxis = $yAxis
-    .attr('transform', `translate(${MARGIN.left}, ${MARGIN.top})`)
-    .call(d3.axisLeft(yScale))
   const yLabel = $svg.append('text')
     .attr('class', 'label y-label')
     .text('Number of people')
@@ -72,7 +71,6 @@ function drawChart(){
     .text('Year')
     .attr('transform', `translate(${MARGIN.left + boundedWidth/2}, ${MARGIN.top + boundedHeight + 30})`)
     .attr('text-anchor', 'middle')
-  
   
   const lineGen = d3.line()
     .x(d => xScale(d.year))
@@ -105,16 +103,21 @@ function drawChart(){
   const $subjectNumCircleEnter = $subjectNumCircle.enter()
     .append('circle')
       .attr('class', 'subject-num-circle')
-      .attr('cx', d => xScale(d.year))
-      .attr('cy', d => yScale(d.number_of_fio_subjects))
-      .attr('r', 2)
+      
   const $subjectNumCircleMerge = $subjectNumCircleEnter.merge($subjectNumCircle)
+  $gVis
+  .selectAll('circle')
+    .attr('cx', d => xScale(d.year))
+    .attr('cy', d => yScale(d.number_of_fio_subjects))
+    .attr('r', 2)
       
 }
 
 function updateDimensions(){
   const h = window.innerHeight;
-  height = Math.floor(h*0.5);
+  const w = window.innerWidth;
+  const isMobile = w <= 600 ? true : false
+  height = isMobile ? Math.floor(h * 0.4) : Math.floor(h * 0.5);
   width = $graphic.node().offsetWidth;
 }
 
@@ -125,6 +128,17 @@ function resize() {
   $gVis.attr('transform', `translate(${MARGIN.left}, ${MARGIN.top})`);
   boundedWidth = width - MARGIN.left - MARGIN.right;
   boundedHeight = height - MARGIN.top - MARGIN.bottom;
+  xScale
+    .range([0, boundedWidth])
+  yScale
+    .range([boundedHeight, 0])
+  xAxis = $xAxis
+    .attr('transform', `translate(${MARGIN.left}, ${MARGIN.top + boundedHeight})`)
+    .call(d3.axisBottom(xScale))
+  yAxis = $yAxis
+    .attr('transform', `translate(${MARGIN.left}, ${MARGIN.top})`)
+    .call(d3.axisLeft(yScale))
+  drawChart()
 }
 
 function handleStepEnter({index, element, direction}){

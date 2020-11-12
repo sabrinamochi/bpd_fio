@@ -21,7 +21,7 @@ let height = 0,
     boundedHeight = 0;
 
 const popData = [
-    {race: "black",
+    {race: "Black",
     0: 0,
     1: 0.2507},
     {race: "white",
@@ -33,7 +33,7 @@ const popData = [
 ]
 
 const stopData = [
-    {race: "black",
+    {race: "Black",
     0: 0,
     1: 0.69},
     {race: "white",
@@ -57,23 +57,19 @@ let currentStep = '0'
 //   }
 // }
 
+const xScale = d3.scaleLinear()
+const yScale = d3.scaleBand()
 
 function drawChart(){
-  const xScale = d3.scaleLinear()
+  
+  xScale
     .domain([0, 1])
-    .range([0, boundedWidth])
-  const yScale = d3.scaleBand()
+  yScale
     .domain(['pop', 'stop'])
-    .range([0, boundedHeight])
     .paddingInner(0.5)
   const colorScale = d3.scaleOrdinal()
-    .domain(['black', 'white', 'others'])
-    .range(['#81A8AD', '#F8DF69', '#C4C4C4'])
-  
-//   const nestedPopData = d3.nest().key(d => d.race).entries(popData)
-//   const stackedPopData = d3.stack().keys(keys).value((d, key) => d.number)(popData)
-//   const stackedStopData = d3.stack().keys(keys)(stopData)
-//   console.log(stackedPopData)
+    .domain(['Black', 'white', 'others'])
+    .range(['#FAB038', '#2A9D8F', '#C4C4C4'])
 
   const $popBars = $gPop.selectAll('.pop-bars')
     .data([popData])
@@ -134,18 +130,27 @@ function drawChart(){
 
 function updateDimensions(){
   const h = window.innerHeight;
-  height = Math.floor(h*0.3);
+  const w = window.innerWidth;
+  const isMobile = w <= 600 ? true : false
+  height = isMobile ? Math.floor(h * 0.4) : Math.floor(h * 0.3);
   width = $graphic.node().offsetWidth;
+  boundedWidth = width - MARGIN.left - MARGIN.right;
+  boundedHeight = height - MARGIN.top - MARGIN.bottom;
 }
 
 function resize() {
-  console.log('resized')
   updateDimensions()
   $svg.attr('height', height)
     .attr('width', width)
   $gVis.attr('transform', `translate(${MARGIN.left}, ${MARGIN.top})`);
-  boundedWidth = width - MARGIN.left - MARGIN.right;
-  boundedHeight = height - MARGIN.top - MARGIN.bottom;
+  xScale
+    .range([0, boundedWidth])
+  yScale
+    .range([0, boundedHeight])
+  $gPop.selectAll('.pop-bars').remove()
+  $gStop.selectAll('.stop-bars').remove()
+  $svg.selectAll('.stacked-bar-title').remove()
+  $svg.selectAll('.stacked-bar-legend').remove()
   drawChart()
 }
 

@@ -1,17 +1,41 @@
 <div id='map'>
     {{#each doc.maps}}
-        <p>
-            {{value}}
-        </p>
+        <div class='map-paragraph'>
+            <p>
+                {{value}}
+            </p>
+        </div>
     {{/each}}
     <div class='graphic-container'>
-        <div class='arrow arrow-bounce left-arrow'>&#8592;</div>
+        {{!-- <div class='arrow arrow-bounce left-arrow'>&#8592;</div> --}}
         <div class='graphic'>
+            <div class='crime-map'>
+                <div class='map-title crime-map-title'></div>
+                <div class='map-tip crime-map-tip'></div>
+                <svg>
+                    <g></g>
+                </svg>
+            </div>
+            <div class='stopped_per-map'>
+                <div class='map-title stopped_per-map-title'></div>
+                <div class='map-tip stopped_per-map-tip'></div>
+                <svg>
+                    <g></g>
+                </svg>
+            </div>
+            <div class='percent_black-map'>
+                 <div class='map-title percent_black-map-title'></div>
+                 <div class='map-tip percent_black-map-tip'></div>
+                <svg>
+                    <g></g>
+                </svg>
+            </div>
+            {{!-- <div class='crime-map'></div>
             <div class='map-title'></div>
             <svg>
                 <g></g>
-            </svg>
+            </svg> --}}
         </div>
-        <div class='arrow arrow-bounce right-arrow'>&#8594;</div>
+        {{!-- <div class='arrow arrow-bounce right-arrow'>&#8594;</div> --}}
     </div>
 </div>

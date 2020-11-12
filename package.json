@@ -12,6 +12,7 @@
     "nouislider": "14.2.0",
     "scrollama": "^2.2.1",
     "simple-statistics": "^7.3.2",
+    "stickyfilljs": "^2.1.0",
     "topojson": "^3.0.2"
   },
   "devDependencies": {

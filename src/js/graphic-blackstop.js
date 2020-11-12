@@ -2,7 +2,7 @@ import loadData from './load-data';
 
 const $div = d3.select('#large-black')
 const $graphic = $div.select('.graphic');
-const $widthRef = d3.select('#map .graphic-container .graphic')
+const $widthRef = d3.select('#declined .graphic')
 
 let height = 0, width = 0
 const MARGIN = {
@@ -82,10 +82,10 @@ function drawChart(data){
             .attr('class', 'stop stop-circle')
             .attr('r', stopRScale(data["stopped_per"]))
             .attr('transform', `translate(0, ${stopRScale(data["stopped_per"])})`)
-            .attr('stroke', '#FF9356')
+            .attr('stroke', '#D01E11')
             .attr('stroke-width', 1)
             .style('mix-blend-mode', 'multiply')  
-            .attr('fill', '#FF9356')
+            .attr('fill', '#D01E11')
             // .attr('fill', 'rgba(0,0,0,0.3)')
     
     } else {
@@ -93,9 +93,9 @@ function drawChart(data){
             .attr('class', 'stop stop-circle')
             .attr('r', stopRScale(data["stopped_per"]))
             .attr('transform', `translate(0, ${stopRScale(data["stopped_per"])})`)
-            .attr('stroke', '#FF9356')
+            .attr('stroke', '#D01E11')
             .attr('stroke-width', 1)
-            .attr('fill', '#FF9356')
+            .attr('fill', '#D01E11')
         $gVis.append('circle')
             .attr('class', 'stop overall-boston')
             .attr('r', stopRScale(1))
@@ -119,7 +119,7 @@ function drawChart(data){
 function updateDimensions(){
     const h = window.innerHeight, w = window.innerWidth
     height = Math.floor(h*0.1)
-    width = $widthRef.node().offsetWidth / 4
+    width = $widthRef.node().offsetWidth *0.8 / 4
     boundedHeight = height - MARGIN.top - MARGIN.bottom
     boundedWidth = width - MARGIN.left - MARGIN.right
 }
@@ -131,7 +131,7 @@ function resize(){
 function init(){
     loadData('shape_with_stops.csv').then(result => {
         dataset = result.filter(d => +d.resident_employee_ratio >=1)
-        dataset.sort((a, b) => +b["stopped_per"] - (+a["stopped_per"]))
+        dataset.sort((a, b) => +b["%black"] - (+a["%black"]))
         resize()
         dataset.forEach(d => drawChart(d))
     })
