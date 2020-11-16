@@ -53,12 +53,20 @@ function resetLine(){
 }
 
 function drawChart(){
-  $svg.selectAll('text').remove()
+  $svg.selectAll('.label').remove()
 
   xScale
     .domain(dataset.map(d => d.year))
   yScale
     .domain([0, d3.max(dataset, d => d.number_of_fio_subjects)])
+  
+  xAxis = $xAxis
+    .attr('transform', `translate(${MARGIN.left}, ${MARGIN.top + boundedHeight})`)
+    .call(d3.axisBottom(xScale))
+  yAxis = $yAxis
+    .attr('transform', `translate(${MARGIN.left}, ${MARGIN.top})`)
+    .call(d3.axisLeft(yScale))
+  
   const yLabel = $svg.append('text')
     .attr('class', 'label y-label')
     .text('Number of people')
@@ -132,12 +140,6 @@ function resize() {
     .range([0, boundedWidth])
   yScale
     .range([boundedHeight, 0])
-  xAxis = $xAxis
-    .attr('transform', `translate(${MARGIN.left}, ${MARGIN.top + boundedHeight})`)
-    .call(d3.axisBottom(xScale))
-  yAxis = $yAxis
-    .attr('transform', `translate(${MARGIN.left}, ${MARGIN.top})`)
-    .call(d3.axisLeft(yScale))
   drawChart()
 }
 

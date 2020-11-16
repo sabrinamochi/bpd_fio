@@ -142,15 +142,15 @@ function drawExplanationChart(selRace, compareTgt = 'boston', populationColumn, 
     } else {
         comparisonTgtChance = selData[0].per_white_stopped_within_whites
         stoppedChance = +selData[0].per_black_stopped_within_blacks
-        comparisonTgtColor = '#2A9D8F'
-        stopColor = '#FAB038'
+        comparisonTgtColor = '#9650A9'
+        stopColor = '#8DB77D'
         rectColor = 'rgba(0,0,0,0.5)'
     }
     // else {
     //     comparisonTgtChance = +selData[0].per_white_stopped_within_whites
     //     stoppedChance = selData[0].per_black_stopped_within_blacks
-    //     comparisonTgtColor = '#2A9D8F'
-    //     stopColor = '#FAB038'
+    //     comparisonTgtColor = '#9650A9'
+    //     stopColor = '#8DB77D'
     //     rectColor = 'rgba(0,0,0,0.5)'
     // }
     const centerR = rScale(comparisonTgtChance)

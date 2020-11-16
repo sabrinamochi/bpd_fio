@@ -50,13 +50,20 @@ function getColor() {
 
 
 function drawChart() {
-  $svg.selectAll('text').remove()
+  $svg.selectAll('.label').remove()
   $gVis.selectAll('.neighborhood').remove()
+  $gVis.selectAll('.more-black-text').remove()
+  $gVis.selectAll('.more-white-text').remove()
   xScale
     .domain(d3.extent(dataset, d => d.crime))
   yScale
     .domain(d3.extent(dataset, d => d.stopped_per))
-  
+  xAxis = $xAxis
+    .attr('transform', `translate(${MARGIN.left}, ${MARGIN.top + boundedHeight})`)
+    .call(d3.axisBottom(xScale))
+  yAxis = $yAxis
+    .attr('transform', `translate(${MARGIN.left}, ${MARGIN.top})`)
+    .call(d3.axisLeft(yScale))
   const yLabel = $svg.append('text')
     .attr('class', 'label y-label')
     .text('Stops per 100 People')
@@ -112,14 +119,16 @@ function drawChart() {
     .attr('class', d => {
       if (+d["%black"] / 100 >= 0.5) {
         return 'more-black-text'
-      } else if (d.neighborhood == 'Brighton' || d.neighborhood == 'Allston') {
+      } else if (d.neighborhood == 'Brighton' || d.neighborhood == 'Allston' 
+                || d.neighborhood == 'East Boston' || d.neighborhood == 'North End') {
         return 'more-white-text'
       } else {
         return;
       }
     })
     .text(d => {
-      if (+d["%black"] / 100 >= 0.5 || (d.neighborhood == 'Brighton' || d.neighborhood == 'Allston')) {
+      if (+d["%black"] / 100 >= 0.5 || (d.neighborhood == 'Brighton' || d.neighborhood == 'Allston' 
+      || d.neighborhood == 'East Boston' || d.neighborhood == 'North End')) {
         return d.neighborhood
       } else {
         return;
@@ -178,7 +187,8 @@ const STEP = {
     const colorScale = getColor()
     $gVis.selectAll('.neighborhood')
       .attr('fill', d => {
-        if (d.neighborhood == 'Brighton' || d.neighborhood == 'Allston') {
+        if ((d.neighborhood == 'Brighton' || d.neighborhood == 'Allston' 
+        || d.neighborhood == 'East Boston' || d.neighborhood == 'North End')) {
           return d.color
         } else {
           return 'rgba(0,0,0,0.1)'
@@ -242,12 +252,7 @@ function updateDimensions() {
     .range([0, boundedWidth])
   yScale
     .range([boundedHeight, 0])
-  xAxis = $xAxis
-    .attr('transform', `translate(${MARGIN.left}, ${MARGIN.top + boundedHeight})`)
-    .call(d3.axisBottom(xScale))
-  yAxis = $yAxis
-    .attr('transform', `translate(${MARGIN.left}, ${MARGIN.top})`)
-    .call(d3.axisLeft(yScale))
+  
 }
 
 function resize() {
