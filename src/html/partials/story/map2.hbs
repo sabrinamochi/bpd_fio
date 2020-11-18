@@ -9,11 +9,18 @@
             <div class='map-title'>
                 Frequency of Stops vs. Black Population
             </div>
-            <svg class='bi-map'>
+            <div class='bi-map stop-black-map'>
+                <img src='assets/images/maps/stop-black-map.png'>
+                
+                <div class="map-legend top">High crime</br>more stops</div>
+                <div class="map-legend right">Low crime</br>more stops</div>
+                <div class="map-legend bottom">Low crime</br>less stops</div>
+                <div class="map-legend left">High crime</br>less stops</div>
+            </div>
+            {{!-- <svg class='bi-map'>
                 <g class='map'></g>
-            </svg>
-
-            <table class='map-legend'>
+            </svg> --}}
+            {{!-- <table class='map-legend'>
                 <tbody>
 
                     <tr>
@@ -33,7 +40,7 @@
                     </tr>
 
                 </tbody>
-            </table>
+            </table> --}}
             {{!-- <div class='crime-map'>
                 <div class='map-title crime-map-title'></div>
                 <div class='map-tip crime-map-tip'></div>

@@ -6,7 +6,7 @@ const $widthRef = d3.select('#declined .graphic')
 const $svg = $graphic.select('svg')
 const $gVis = $svg.select('.chart')
 const $border = $svg.select('.border-lines')
-
+var $titles = $svg.select(".title")
 
 let height = 0,
   width = 0
@@ -43,8 +43,9 @@ const yScale = d3.scaleLinear(),
 
 function drawChart(data) {
   $border.selectAll("*").remove()
-  $gVis.selectAll(".slope-group").remove()
-
+  $titles.selectAll('text').remove()
+  $gVis.selectAll("*").remove()
+  
   xScale
     .domain(["white", "black"])
     .range([MARGIN.left, boundedWidth])
@@ -104,7 +105,7 @@ function drawChart(data) {
     .attr("cy", d => yScale(d.per_white_stopped_within_whites))
 
   var leftSlopeLabels = $slopeGroups.append("g")
-    .attr("class", "slope-label-left")
+    .attr("class", "slope-label slope-label-left")
     .each(function (d) {
       d.xLeftPosition = -config.labelGroupOffset;
       d.yLeftPosition = yScale(d.per_white_stopped_within_whites)
@@ -139,7 +140,6 @@ function drawChart(data) {
         return d.neighborhood
       }
     })
-    .style('font-size', '12px')
 
   var rightSlopeCircle = $slopeGroups.append("circle")
     .attr('class', 'slope-circle right-slope-circle')
@@ -149,7 +149,7 @@ function drawChart(data) {
     .attr("cy", d => yScale(d.per_black_stopped_within_blacks))
 
   var rightSlopeLabels = $slopeGroups.append("g")
-    .attr("class", "slope-label-right")
+    .attr("class", "slope-label slope-label-right")
     .each(function (d) {
       d.xRightPosition = boundedWidth + config.labelGroupOffset;
       d.yRightPosition = yScale(d.per_black_stopped_within_blacks);
@@ -181,10 +181,9 @@ function drawChart(data) {
         return d.neighborhood
       }
     })
-    .style('font-size', '12px')
 
 
-  var $titles = $svg.select(".title")
+
 
   $titles.append("text")
     .attr("text-anchor", "middle")

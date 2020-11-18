@@ -6,14 +6,21 @@
     </div>
     <div class='graphic-container'>
         <div class='graphic'>
-                <div class='map-title'>
-                    Crime Index vs. Frequency of Stops
-                </div>
-                <svg class='bi-map'>
+            <div class='map-title'>
+                Crime Index vs. Frequency of Stops
+            </div>
+            <div class='bi-map crime-stop-map'>
+                <img src='assets/images/maps/crime-stop-map.png'>
+                <div class="map-legend top">More Blacks</br>more stops</div>
+                <div class="map-legend right">More Blacks</br>less stops</div>
+                <div class="map-legend bottom">Less Blacks</br>less stops</div>
+                <div class="map-legend left">Less Blacks</br>more stops</div>
+            </div>
+            {{!-- <svg class='bi-map'>
                     <g class='map'></g>
                 </svg>
-                
-                <table class='map-legend'>
+                 --}}
+            {{!-- <table class='map-legend'>
                     <tbody>
                         
                         <tr>
@@ -33,7 +40,7 @@
                         </tr>
                       
                     </tbody>
-                </table>
+                </table> --}}
             {{!-- <div class='crime-map'>
                 <div class='map-title crime-map-title'></div>
                 <div class='map-tip crime-map-tip'></div>

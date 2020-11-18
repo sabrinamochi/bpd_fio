@@ -230,7 +230,7 @@ function setupScroller() {
   Stickyfill.add($graphic.node());
   scroller.setup({
       step: $step.nodes(),
-      offset: 0.6
+      offset: 0.5
     })
     .onStepEnter(handleStepEnter)
     .onStepExit(handleStepExit)

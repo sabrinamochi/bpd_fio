@@ -25,8 +25,9 @@ const stopRScale = d3.scaleSqrt(),
 
   function drawChart(data) {
 
-    // $gVis.selectAll(".bar").remove()
-  
+    $gVis.selectAll("*").remove()
+    $gLegend.selectAll("*").remove()
+
     stopRScale
       .domain(d3.extent(dataset, d => +d.stopped_per))
       .range([4, boundedWidth / 4])
@@ -86,6 +87,7 @@ const stopRScale = d3.scaleSqrt(),
     const rectWidth = 400
     const rectHeight = 30
     $gLegend.append("rect")
+        .attr('class', 'legend-rect')
         .attr('x', boundedWidth/2 - rectWidth/2)
         .attr("width", rectWidth)
         .attr("height", rectHeight)
