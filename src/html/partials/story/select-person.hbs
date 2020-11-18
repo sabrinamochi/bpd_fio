@@ -1,4 +1,4 @@
-<div id='select-person'>
+<div id='large-black'>
     <div class='select-person-intro'>
         <div class='paragraph'>
             <p>{{doc.select-person}}</p>
@@ -11,22 +11,73 @@
             <p class='assigned-person'></p>
         </div>
     </div>
-    <div class='sticky-div'>
-        <div class='graphic'>
-            <svg>
-                <g></g>
-            </svg>
+    <div class='scroll'>
+        <div class='scroll__graphic'>
+            <div class='graphic'>
+                <div class='tool-tip'></div>
+                <svg>
+                    <g class='chart'></g>
+                    <g class='legend'></g>
+                </svg>
+            </div>
+        </div>
+        <div class='scroll__text'>
+            <div class='step' data-step='overall-boston'>
+                <p class='overall-boston'>{{doc.overall-boston}}</p>
+            </div>
+            <div class='step' data-step='black-pop'>
+                <p class='black-pop'></p>
+            </div>
+            <div class='step' data-step='your-neighborhood-chance'>
+                <p class='your-neighborhood-chance'></p>
+            </div>
+            <div class='step' data-step='explain'>
+                <p class='explain'>
+                    {{doc.large-black}}
+                </p>
+            </div>
+            <div class='step' data-step='explore'>
+                <p class='explore'>
+                    {{doc.explore}}
+                </p>
+            </div>
         </div>
     </div>
-    <div class='result'>
-        <div class='step' data-step='overall-boston'>
-            <p class='overall-boston'>{{doc.overall-boston}}</p>
-        </div>
-        <div class='step' data-step='black-pop'>
-            <p class='black-pop'></p>
-        </div>
-        <div class='step' data-step='your-neighborhood-chance'>
-            <p class='your-neighborhood-chance'></p>
+</div>
+<div id='stop-by-race'>
+    <div class='stop-by-race-intro'>
+        <div class='paragraph'>
+            <p></p>
         </div>
     </div>
+    <div class='scroll'>
+        <div class='scroll__graphic'>
+            <div class='graphic'>
+                <svg>
+                    <g class='title'></g>
+                    <g class='border-lines'></g>
+                    <g class='chart'></g>
+                </svg>
+            </div>
+        </div>
+        <div class='scroll__text'>
+            <div class='step' data-step='remind-race'>
+                <p class='remind-race'></p>
+            </div>
+            <div class='step' data-step='your-race-in-boston'>
+                <p class='your-race-in-boston'></p>
+            </div>
+            <div class='step' data-step='if-another'>
+                <p class='if-another'></p>
+            </div>
+            {{#each doc.by-race}}
+            <div class='step' data-step='{{step}}'>
+                <p class='{{step}}'>
+                    {{text}}
+                </p>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+
 </div>

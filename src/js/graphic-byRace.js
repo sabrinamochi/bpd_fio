@@ -1,136 +1,243 @@
 import loadData from './load-data';
 
-const $div = d3.select('#by-race-conclusion')
-const $graphic = $div.select('.graphic');
+const $div = d3.select('#stop-by-race')
+const $graphic = $div.select('.scroll .scroll__graphic .graphic');
 const $widthRef = d3.select('#declined .graphic')
+const $svg = $graphic.select('svg')
+const $gVis = $svg.select('.chart')
+const $border = $svg.select('.border-lines')
 
-let height = 0, width = 0
+
+let height = 0,
+  width = 0
 const MARGIN = {
-    top: 10,
-    right: 0,
-    bottom: 10,
-    left: 0
+  top: 30,
+  right: 120,
+  bottom: 40,
+  left: 120
 }
+
+const config = {
+  labelPositioning: {
+    alpha: 0.5,
+    spacing: 18
+  },
+  leftTitle: "if you're white",
+  rightTitle: "if you're Black",
+  labelGroupOffset: 5,
+  labelKeyOffset: 0,
+  radius: 6,
+  // Reduce this to turn on detail-on-hover version
+  unfocusOpacity: 0.3
+}
+
 let boundedHeight, boundedWidth;
 
 let dataset;
 
-function drawChart(data){
-
-    const stopRScale = d3.scaleSqrt()
-        .domain(d3.extent(dataset, d => +d.stopped_per))
-        .range([1, 25])
-
-    const rectWidth = boundedWidth/2.5
-    const populationXRange = [boundedWidth/3, boundedWidth/3+rectWidth]
-    const populationYRange = [stopRScale(1), stopRScale(1)+rectWidth]
-    const populationScale = d3.scaleLinear()
-        .domain(d3.extent(dataset, d => +d["%black"]))
-        .range([3, 150])
-
-    const $container = $graphic
-        .append('div')
-            .attr('class', 'black-stop-container')
-        
-    const $title = $container.append('div')
-        .attr('class', 'black-stop-chart-title')
-        .html(`${data.Name.split(", ")[0]}, ${data.Name.split(", ")[1]}`)
-            
-    const $svg = $container.append('svg')
-                    .attr('width', width)
-                    .attr('height', height)
-    const $gVis = $svg
-        .append('g')
-            .attr('transform', `translate(${MARGIN.left}, ${MARGIN.top})`)
-    
-    const numOfCircle = Math.floor(populationScale(+data["%white"]))
-    const numOfCircleList = [...Array(numOfCircle).keys()];
-    $gVis.append('rect')
-        .attr('width', rectWidth)
-        .attr('height', rectWidth)
-        .attr('transform', `translate(${boundedWidth/3}, ${stopRScale(1)})`)
-        .attr('fill', '#8DB77D')
-        .attr('fill', 'rgba(0,0,0,0.5)')
+const yScale = d3.scaleLinear(),
+  xScale = d3.scalePoint(),
+  populationScale = d3.scaleLinear(),
+  lineGen = d3.line();
 
 
-    $gVis.selectAll('.popu-circle')
-        .data(numOfCircleList)
-        .enter()
-        .append('circle')
-        .attr('r', 1)
-        .attr('fill', 'rgba(255,255,255,1)')
-        .attr('cx', d => Math.random() * (populationXRange[1] - populationXRange[0]) + populationXRange[0])
-        .attr('cy', d => Math.random() * (populationYRange[1] - populationYRange[0]) + populationYRange[0])
- 
-    
-    if(data["per_black_stopped_within_blacks"] < data["per_white_stopped_within_whites"]){
-        $gVis.append('circle')
-            .attr('class', 'stop stop-white')
-            .attr('r', stopRScale(data["per_white_stopped_within_whites"]))
-            .attr('transform', `translate(0, ${stopRScale(data["per_white_stopped_within_whites"])})`)
-            .attr('stroke', '#9650A9')
-            .attr('stroke-dasharray', '3,3')
-            .attr('stroke-width', 2)
-            .attr('fill', 'white')
+function drawChart(data) {
+  $border.selectAll("*").remove()
+  $gVis.selectAll(".slope-group").remove()
 
-        $gVis.append('circle')
-            .attr('class', 'stop stop-black')
-            .attr('r', stopRScale(data["per_black_stopped_within_blacks"]))
-            .attr('transform', `translate(0, ${stopRScale(data["per_black_stopped_within_blacks"])})`)
-            .attr('stroke', '#8DB77D')    
-            .attr('stroke-width', 1)
-            .style('mix-blend-mode', 'multiply')  
-            .attr('fill', '#8DB77D')
-            // .attr('fill', 'rgba(0,0,0,0.3)')
-    
-    } else {
-        $gVis.append('circle')
-            .attr('class', 'stop stop-black')
-            .attr('r', stopRScale(data["per_black_stopped_within_blacks"]))
-            .attr('transform', `translate(0, ${stopRScale(data["per_black_stopped_within_blacks"])})`)
-            .attr('stroke', '#8DB77D')
-            .attr('stroke-width', 1)
-            .attr('fill', '#8DB77D')
-            
-         $gVis.append('circle')
-            .attr('class', 'stop stop-white')
-            .attr('r', stopRScale(data["per_white_stopped_within_whites"]))
-            .attr('transform', `translate(0, ${stopRScale(data["per_white_stopped_within_whites"])})`)
-            .attr('stroke', '#9650A9')    
-            .attr('stroke-dasharray', '3,3')
-            .attr('stroke-width', 2)
-            .attr('fill', 'none')
-    
-    }
-        
-    
-    d3.selectAll('.stop')
-        .attr('cx', boundedWidth/3)
-        // .attr('fill', 'rgba(255,255,255,1)')
-        // .attr('fill', 'none')
-              
-    
-}
+  xScale
+    .domain(["white", "black"])
+    .range([MARGIN.left, boundedWidth])
+    .padding(.5);
 
-function updateDimensions(){
-    const h = window.innerHeight, w = window.innerWidth
-    height = Math.floor(h*0.1)
-    width = $widthRef.node().offsetWidth * 0.8 / 4
-    boundedHeight = height - MARGIN.top - MARGIN.bottom
-    boundedWidth = width - MARGIN.left - MARGIN.right
-}
+  yScale
+    .range([boundedHeight + MARGIN.top, MARGIN.top])
+    .domain([0, d3.max(data, d => d.per_black_stopped_within_blacks)])
 
-function resize(){
-    updateDimensions()   
-}
+  lineGen.x((d, i) => xScale(i))
+    .y(yScale)
 
-function init(){
-    loadData('shape_with_stops.csv').then(result => {
-        dataset = result.filter(d => +d.resident_employee_ratio >=1)
-        dataset.sort((a, b) => +b["%white"] - (+a["%white"]))
-        resize()
-        dataset.forEach(d => drawChart(d))
+  populationScale
+    .domain(d3.extent(dataset, d => +d["%black"]))
+    .range(['#8DB77D', '#9650A9'])
+
+  $border
+    .append("line")
+    .attr('id', 'border-line-left')
+    .attr("x1", MARGIN.left).attr("y1", MARGIN.top)
+    .attr("x2", MARGIN.left).attr("y2", MARGIN.top * 2 + boundedHeight)
+    .attr('stroke', 'rgba(0,0,0,0.5')
+  $border.append("line")
+    .attr('id', 'border-line-right')
+    .attr("x1", MARGIN.left + boundedWidth).attr("y1", MARGIN.top)
+    .attr("x2", MARGIN.left + boundedWidth).attr("y2", MARGIN.top * 2 + boundedHeight)
+    .attr('stroke', 'rgba(0,0,0,0.5')
+  //slopes
+  const $slopeGroups = $gVis.selectAll(".slope-group")
+    .data(data)
+    .enter().append("g")
+    .attr("class", "slope-group")
+    .attr("id", function (d, i) {
+      d.id = "group" + i;
+      // d.values[0].group = this;
+      // d.values[1].group = this;
+    });
+  const $slopeLines = $slopeGroups.append("line")
+    .attr("class", "slope-line")
+    .attr('id', d => `slope-line-${d.zip}`)
+    .attr("x1", 0)
+    .attr("y1", function (d) {
+      return yScale(d.per_white_stopped_within_whites);
     })
+    .attr("x2", boundedWidth)
+    .attr("y2", function (d) {
+      return yScale(d.per_black_stopped_within_blacks)
+    })
+    .attr('stroke', d => populationScale(d['%white']))
+    .attr('fill', 'none')
+    .attr('stroke-width', 3)
+  const radius = 2
+  var leftSlopeCircle = $slopeGroups.append("circle")
+    .attr('class', 'slope-circle left-slope-circle')
+    .attr('id', d => `left-circle-${d.zip}`)
+    .attr("r", radius)
+    .attr("cy", d => yScale(d.per_white_stopped_within_whites))
+
+  var leftSlopeLabels = $slopeGroups.append("g")
+    .attr("class", "slope-label-left")
+    .each(function (d) {
+      d.xLeftPosition = -config.labelGroupOffset;
+      d.yLeftPosition = yScale(d.per_white_stopped_within_whites)
+    });
+
+  //   leftSlopeLabels.append("text")
+  //     .attr("class", "label-figure")
+  //     .attr("x", d => d.xLeftPosition)
+  //     .attr("y", d => d.yLeftPosition)
+  //     .attr("dx", -10)
+  //     .attr("dy", 3)
+  //     .attr("text-anchor", "end")
+  //     .text(d => d.per_white_stopped_within_whites);
+
+  leftSlopeLabels.append("text")
+    .attr("class", "slope-label-left-text")
+    .attr('id', d => `left-label-${d.zip}`)
+    .attr("x", d => d.xLeftPosition)
+    .attr("y", d => d.yLeftPosition)
+    .attr("dx", -config.labelKeyOffset)
+    .attr("dy", 3)
+    .attr("text-anchor", "end")
+    .text(d => {
+      if ((d.neighborhood == "Roxbury") ||
+        (d.neighborhood == "Dorchester(02121)") ||
+        (d.neighborhood == "Mattapan") ||
+        (d.neighborhood == "South End") ||
+        (d.neighborhood == "Dorchester(02125)") ||
+        (d.neighborhood == "Brighton") ||
+        (d.neighborhood == "West Roxbury") ||
+        (d.neighborhood == "East Boston")) {
+        return d.neighborhood
+      }
+    })
+    .style('font-size', '12px')
+
+  var rightSlopeCircle = $slopeGroups.append("circle")
+    .attr('class', 'slope-circle right-slope-circle')
+    .attr('id', d => `right-circle-${d.zip}`)
+    .attr("r", radius)
+    .attr("cx", boundedWidth)
+    .attr("cy", d => yScale(d.per_black_stopped_within_blacks))
+
+  var rightSlopeLabels = $slopeGroups.append("g")
+    .attr("class", "slope-label-right")
+    .each(function (d) {
+      d.xRightPosition = boundedWidth + config.labelGroupOffset;
+      d.yRightPosition = yScale(d.per_black_stopped_within_blacks);
+    });
+
+  //   rightSlopeLabels.append("text")
+  //     .attr("class", "label-figure")
+  //     .attr("x", d => d.xRightPosition)
+  //     .attr("y", d => d.yRightPosition)
+  //     .attr("dx", 10)
+  //     .attr("dy", 3)
+  //     .attr("text-anchor", "start")
+  //     .text(d => (d.values[1].max / d.values[1].min).toPrecision(3));
+
+  rightSlopeLabels.append("text")
+    .attr("class", "slope-label-right-text")
+    .attr('id', d => `right-label-${d.zip}`)
+    .attr("x", d => d.xRightPosition)
+    .attr("y", d => d.yRightPosition)
+    .attr("dx", config.labelKeyOffset)
+    .attr("dy", 3)
+    .attr("text-anchor", "start")
+    .text(d => {
+      if ((d.neighborhood !== "South End") &&
+        (d.neighborhood !== "Dorchester(02125)") &&
+        (d.neighborhood !== "Brighton") &&
+        (d.neighborhood !== "West Roxbury") &&
+        (d.neighborhood !== "East Boston")) {
+        return d.neighborhood
+      }
+    })
+    .style('font-size', '12px')
+
+
+  var $titles = $svg.select(".title")
+
+  $titles.append("text")
+    .attr("text-anchor", "middle")
+    .attr("x", MARGIN.left)
+    .attr("dx", 0)
+    .attr("dy", MARGIN.top / 2)
+    .text(config.leftTitle);
+
+    $titles.append("text")
+    .attr("x", MARGIN.left+boundedWidth)
+    .attr("dx", 0)
+    .attr("dy", MARGIN.top / 2)
+    .text(config.rightTitle);
 }
 
-export default { init, resize }
+function updateDimensions() {
+  const h = window.innerHeight,
+    w = window.innerWidth
+  height = Math.floor(h * 0.95)
+  width = w * 0.6
+  boundedHeight = height - MARGIN.top - MARGIN.bottom
+  boundedWidth = width - MARGIN.left - MARGIN.right
+}
+
+function resize() {
+  updateDimensions()
+  $svg.attr('width', width)
+    .attr('height', height)
+  $gVis.attr('transform', `translate(${MARGIN.left}, ${MARGIN.top})`)
+  drawChart(dataset)
+}
+
+function init() {
+  loadData('shape_with_stops.csv').then(result => {
+    result = result.filter(d => +d.resident_employee_ratio >= 1)
+
+    result.forEach(d => {
+      if (d.Name.split(", ")[1] === "Dorchester") {
+        d.neighborhood = `${d.Name.split(", ")[1]}(${d.Name.split(", ")[0]})`
+      } else {
+        d.neighborhood = `${d.Name.split(", ")[1]}`
+      }
+      d.group1 == "white"
+      d.group2 == "black"
+
+    })
+    dataset = result;
+    dataset.sort((a, b) => +b["%white"] - (+a["%white"]))
+    resize()
+  })
+}
+
+export default {
+  init,
+  resize
+}

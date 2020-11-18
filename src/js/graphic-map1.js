@@ -180,12 +180,12 @@ function draw() {
   const legendTextWidth = document.querySelector('.top').getBoundingClientRect().width
   const legendHeight = document.querySelector('.map-legend').getBoundingClientRect().height
   const legendWidth = document.querySelector('.map-legend').getBoundingClientRect().width
-  const topLegendLeft = isMobile ? boundedWidth/2 - legendTextWidth/8 : legendLeft+legendTextWidth/2.4;
+  const topLegendLeft = isMobile ? boundedWidth/2 - legendTextWidth/8 : legendLeft+legendTextWidth/3;
   const topLegendTop = isMobile ? legendTop-legendTextHeight : legendTop-legendTextHeight*1.8
   const rightLegendLeft = isMobile ? legendLeft+legendWidth-legendTextWidth/5 : legendLeft+legendWidth-legendTextWidth/4
   const rightLegendTop = legendTop+legendWidth/2-legendTextHeight
-  const bottomLegendTop = legendTop+legendHeight-legendTextHeight/2
-  const leftLegendLeft = legendLeft-legendTextWidth
+  const bottomLegendTop = legendTop+legendHeight-legendTextHeight/1.5
+  const leftLegendLeft = legendLeft-legendTextWidth*1.4
   $legend
     .style('top', `${legendTop}px`)
     .style('left', `${legendLeft}px`)

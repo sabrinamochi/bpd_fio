@@ -51,20 +51,16 @@
 			{{> story/map2}}
 		</section>
 
+		<section class='rhone'>
+			{{#each doc.rhone}}
+				<div>
+					<p>{{value}}</p>
+				</div>
+			{{/each}}
+		</section>
+
 		<section class='select-person-section'>
 			{{> story/select-person}}
-		</section>
-
-		<section class='large-black-conclusion'>
-			{{> story/large-black}}
-		</section>
-
-		<section class='by-race'>
-			{{> story/stop-by-race}}
-		</section>
-
-		<section class='by-race-conclusion-section'>
-			{{> story/by-race-conclusion}}
 		</section>
 
 		<section id='conclude'>

@@ -30,10 +30,7 @@ h3
         position relative
     .step 
         height 100vh
-        p
-            background-color rgba(255,255,255,1)    
-            padding 1rem 
-            box-shadow 2px 2px 3px rgba(0,0,0,0.8)
+        
     @media phone
         .scroll__img
             height 100vh
@@ -71,18 +68,19 @@ h3
 
 #scatter
     position relative
+    display flex
+    max-width 100%
     .scroll__graphic
+        margin 1rem
         position sticky
         position -webkit-sticky
         top 10rem
+        align-self start
         .scatter
             cursor pointer
         .more-black-text, .more-white-text
             @media phone
                 font-size 7px
-    .tool-tip 
-        position: absolute
-        visibility hidden
         p
             font-size 12px
             font-family $sans
@@ -158,34 +156,68 @@ h3
 .hidden
     display none           
 
-#select-person
+#large-black, #stop-by-race
     position relative
-    .result
+    .conclusion
         display none
-        .step 
-            position relative
-            height 60vh
-            p
-                background-color rgba(255,255,255,1)    
-                padding 1rem 
-                box-shadow 2px 2px 3px rgba(0,0,0,0.5)
-        .overall-boston
-            opacity 0
+    .scroll
+        position relative
+        display flex
+        justify-content center
+        &__text
+            display none
+            .step 
+                p
+                    background-color rgba(255,255,255,1)    
+                    padding 1rem 
+                    box-shadow 2px 2px 3px rgba(0,0,0,0.5)
+            .overall-boston
+                opacity 0
+        &__graphic
+            width 50%
+            position sticky
+            position -webkit-sticky
+            top 0
+            margin 0 auto
+            align-self start
+            .graphic 
+                position relative
+                display none
+                text-align center
+                .tool-tip 
+                    background-color rgba(255,255,255,1)
+                    stroke rgb(0,0,0)
+                .stop-circle
+                    cursor pointer
+                .black-stop-chart-title
+                    font-size 12px
+                    text-align center
+                .black-stop-container
+                    display grid
+                    justify-content center
+                .slope-circle
+                    fill rgba(255,255,255,1)
+                    stroke rgb(0,0,0)
+                    stroke-width 1
+                .title
+                    text-anchor middle
+                    font-size 16px
+                .legend-text
+                    font-family $sans
+                    font-size 16px
     .assigned-person
         font-size 50px
         width 80%
         line-height 1.5
-    .sticky-div
-        position sticky
-        position -webkit-sticky
-        top 8rem
+    .select-person-intro
+        max-width $column-width
         margin 0 auto
-        .graphic 
-            display none
     .button-group
         display flex
         justify-content space-between
         margin 3rem 0
+        max-width $column-width
+        margin 0 auto
         button
             width 45%
             height 3rem
@@ -193,45 +225,22 @@ h3
             box-shadow 2px 2px 3px rgba(0,0,0,0.5)
         button:hover
             opacity 0.8
-    .selected-neighborhood
-        color #D01E11
 
-#large-black, #by-race-conclusion
-    display none
-    .graphic
-        display grid
-        grid-template-columns repeat(4, 1fr)
-        margin: 6rem 0;
-        .black-stop-chart-title
-            font-size 12px
-            text-align center
-        .black-stop-container
-            display grid
-            justify-content center
+#stop-by-race
+    .scroll
+        &__graphic
+            top 0
 
-#stop-by-race  
+#by-race-conclusion
     display none
-    position relative
-    .sticky-div
-        position sticky
-        position -webkit-sticky
-        top 8rem
-        margin 0 auto
-    .result
-        .step 
-            position relative
-            height 60vh
-            p
-                background-color rgba(255,255,255,1)    
-                padding 1rem 
-                box-shadow 2px 2px 3px rgba(0,0,0,0.5)
+    
 #conclude
     display none
 
-.white-color
-    color #9650A9
-.black-color
-    color #8DB77D
+// .white-color
+//     color #9650A9
+// .black-color
+//     color #8DB77D
 .selected-person
     opacity 1
     background-color rgba(0,0,0,0.9)
@@ -243,6 +252,13 @@ h3
 .step
     position relative
     z-index 999
+    height 60vh
+    max-width $column-width
+    margin 5rem 2rem
+    p
+        background-color rgba(255,255,255,1)    
+        padding 1rem 
+        box-shadow 2px 2px 3px rgba(0,0,0,0.8)
         
 .graphic, .scroll__graphic
         margin 3rem auto
@@ -259,7 +275,11 @@ svg
         font-family $sans
         font-size 12px
 
-#black, #suppor-fio, #declined, #scatter, #map1, #map2, #select-person, #large-black .paragraph, #stop-by-race, #by-race-conclusion .paragraph, #conclude
+.tool-tip 
+    position: absolute
+    visibility hidden
+
+#black, #suppor-fio, #declined, #map1, .rhone, #map2, #select-person, #large-black .paragraph, #stop-by-race .paragraph, #by-race-conclusion .paragraph, #conclude
     max-width $column-width
     margin 0 auto
     @media phone
