@@ -11,9 +11,9 @@ var $titles = $svg.select(".title")
 let height = 0,
   width = 0
 const MARGIN = {
-  top: 30,
+  top: 50,
   right: 120,
-  bottom: 40,
+  bottom: 60,
   left: 120
 }
 
@@ -189,13 +189,13 @@ function drawChart(data) {
     .attr("text-anchor", "middle")
     .attr("x", MARGIN.left)
     .attr("dx", 0)
-    .attr("dy", MARGIN.top / 2)
+    .attr("dy", MARGIN.top)
     .text(config.leftTitle);
 
     $titles.append("text")
     .attr("x", MARGIN.left+boundedWidth)
     .attr("dx", 0)
-    .attr("dy", MARGIN.top / 2)
+    .attr("dy", MARGIN.top)
     .text(config.rightTitle);
 }
 

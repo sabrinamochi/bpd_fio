@@ -83,7 +83,7 @@ const stopRScale = d3.scaleSqrt(),
       .enter().append("stop")
         .attr("offset", d => ((d.value - extent[0]) / (extent[1] - extent[0]) * 100) + "%")
         .attr("stop-color", d => d.color);
-    $gLegend.attr('transform', `translate(${MARGIN.left}, ${MARGIN.top + boundedHeight / 5})`)
+    $gLegend.attr('transform', `translate(${MARGIN.left}, ${MARGIN.top + boundedHeight / 8})`)
     const rectWidth = 400
     const rectHeight = 30
     $gLegend.append("rect")
