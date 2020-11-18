@@ -202,8 +202,9 @@ function drawChart(data) {
 function updateDimensions() {
   const h = window.innerHeight,
     w = window.innerWidth
-  height = Math.floor(h * 0.95)
-  width = w * 0.6
+  const isMobile = w <= 600 ? true : false
+  height = isMobile ? Math.floor(h * 0.9) : Math.floor(h * 0.95)
+  width = isMobile ? w * 0.95 : w * 0.6
   boundedHeight = height - MARGIN.top - MARGIN.bottom
   boundedWidth = width - MARGIN.left - MARGIN.right
 }

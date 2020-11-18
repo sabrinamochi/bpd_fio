@@ -112,8 +112,9 @@ const stopRScale = d3.scaleSqrt(),
 function updateDimensions() {
   const h = window.innerHeight,
     w = window.innerWidth
-  height = Math.floor(h * 0.8)
-  width = w * 0.6
+  const isMobile = w <= 600 ? true : false
+  height = isMobile ? Math.floor(h * 0.5) : Math.floor(h * 0.8);
+  width = isMobile ? w * 0.9 : w * 0.6
   boundedHeight = height - MARGIN.top - MARGIN.bottom
   boundedWidth = width - MARGIN.left - MARGIN.right
 
