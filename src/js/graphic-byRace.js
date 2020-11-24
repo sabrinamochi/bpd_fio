@@ -11,10 +11,10 @@ var $titles = $svg.select(".title")
 let height = 0,
   width = 0
 const MARGIN = {
-  top: 50,
-  right: 120,
+  top: 100,
+  right: 10,
   bottom: 60,
-  left: 120
+  left: 100
 }
 
 const config = {
@@ -22,8 +22,6 @@ const config = {
     alpha: 0.5,
     spacing: 18
   },
-  leftTitle: "if you're white",
-  rightTitle: "if you're Black",
   labelGroupOffset: 5,
   labelKeyOffset: 0,
   radius: 6,
@@ -35,44 +33,88 @@ let boundedHeight, boundedWidth;
 
 let dataset;
 
-const yScale = d3.scaleLinear(),
-  xScale = d3.scalePoint(),
-  populationScale = d3.scaleLinear(),
-  lineGen = d3.line();
+const yScale = d3.scaleBand(),
+  xScale = d3.scaleLinear(),
+  populationScale = d3.scaleLinear()
+// lineGen = d3.line();
 
 
 function drawChart(data) {
   $border.selectAll("*").remove()
   $titles.selectAll('text').remove()
   $gVis.selectAll("*").remove()
-  
+
   xScale
-    .domain(["white", "black"])
-    .range([MARGIN.left, boundedWidth])
-    .padding(.5);
+    .domain([0, d3.max(data, d => d.per_white_stopped_within_whites)])
+    .range([0, boundedWidth])
 
   yScale
-    .range([boundedHeight + MARGIN.top, MARGIN.top])
-    .domain([0, d3.max(data, d => d.per_black_stopped_within_blacks)])
+    .range([boundedHeight, 0])
+    .domain(data.map(d => d.neighborhood))
+    .padding(.2);
 
-  lineGen.x((d, i) => xScale(i))
-    .y(yScale)
+  // lineGen
+  //   .x(d => xScale(d.per_black_stopped_within_blacks))
+  //   .y(d => yScale(d.neighborhood))
 
   populationScale
     .domain(d3.extent(dataset, d => +d["%black"]))
-    .range(['#8DB77D', '#9650A9'])
+    .range(['#E8AA46', '#81A8AD'])
 
   $border
     .append("line")
     .attr('id', 'border-line-left')
     .attr("x1", MARGIN.left).attr("y1", MARGIN.top)
-    .attr("x2", MARGIN.left).attr("y2", MARGIN.top * 2 + boundedHeight)
+    .attr("x2", MARGIN.left).attr("y2", MARGIN.top + boundedHeight)
     .attr('stroke', 'rgba(0,0,0,0.5')
   $border.append("line")
     .attr('id', 'border-line-right')
     .attr("x1", MARGIN.left + boundedWidth).attr("y1", MARGIN.top)
-    .attr("x2", MARGIN.left + boundedWidth).attr("y2", MARGIN.top * 2 + boundedHeight)
+    .attr("x2", MARGIN.left + boundedWidth).attr("y2", MARGIN.top + boundedHeight)
     .attr('stroke', 'rgba(0,0,0,0.5')
+
+  const circleLegendG = $gVis.append('g')
+    .attr('class', 'circle-legend-group')
+    .attr('transform', `translate(${boundedWidth/2}, ${-MARGIN.top / 2})`)
+    .selectAll('.circle-legend')
+    .data(['white', 'Black'])
+  circleLegendG .enter().append('text')
+    .text(d => d)
+    .attr('y', 10)
+    .attr('x', (d, i) => {
+      if (i == 0) {
+        return -35
+      } else {
+        return 45
+      }
+    })
+  circleLegendG .enter().append('circle')
+    .attr('class', 'circle-legend')
+    .attr('fill', d => {
+      if (d == 'white') {
+        return 'white'
+      } else {
+        return 'black'
+      }
+    })
+    .attr('stroke', d => {
+      if (d == 'white') {
+        return 'black'
+      } else {
+        return 'none'
+      }
+    })
+    .attr('cy', 5)
+    .attr('r', 5)
+    .attr('cx', (d, i) => {
+      if (i == 0) {
+        return -40
+      } else {
+        return 40
+      }
+    })
+
+
   //slopes
   const $slopeGroups = $gVis.selectAll(".slope-group")
     .data(data)
@@ -86,23 +128,24 @@ function drawChart(data) {
   const $slopeLines = $slopeGroups.append("line")
     .attr("class", "slope-line")
     .attr('id', d => `slope-line-${d.zip}`)
-    .attr("x1", 0)
+    .attr("x1", d => xScale(d.per_white_stopped_within_whites))
     .attr("y1", function (d) {
-      return yScale(d.per_white_stopped_within_whites);
+      return yScale(d.neighborhood);
     })
-    .attr("x2", boundedWidth)
+    .attr("x2", d => xScale(d.per_black_stopped_within_blacks))
     .attr("y2", function (d) {
-      return yScale(d.per_black_stopped_within_blacks)
+      return yScale(d.neighborhood)
     })
-    .attr('stroke', d => populationScale(d['%white']))
+    .attr('stroke', d => populationScale(d['%black']))
     .attr('fill', 'none')
-    .attr('stroke-width', 3)
-  const radius = 2
+    .attr('stroke-width', 5)
+  const radius = 5
   var leftSlopeCircle = $slopeGroups.append("circle")
     .attr('class', 'slope-circle left-slope-circle')
     .attr('id', d => `left-circle-${d.zip}`)
     .attr("r", radius)
-    .attr("cy", d => yScale(d.per_white_stopped_within_whites))
+    .attr('cx', d => xScale(d.per_white_stopped_within_whites))
+    .attr("cy", d => yScale(d.neighborhood))
 
   var leftSlopeLabels = $slopeGroups.append("g")
     .attr("class", "slope-label slope-label-left")
@@ -124,36 +167,28 @@ function drawChart(data) {
     .attr("class", "slope-label-left-text")
     .attr('id', d => `left-label-${d.zip}`)
     .attr("x", d => d.xLeftPosition)
-    .attr("y", d => d.yLeftPosition)
+    .attr("y", d => yScale(d.neighborhood))
     .attr("dx", -config.labelKeyOffset)
     .attr("dy", 3)
     .attr("text-anchor", "end")
     .text(d => {
-      if ((d.neighborhood == "Roxbury") ||
-        (d.neighborhood == "Dorchester(02121)") ||
-        (d.neighborhood == "Mattapan") ||
-        (d.neighborhood == "South End") ||
-        (d.neighborhood == "Dorchester(02125)") ||
-        (d.neighborhood == "Brighton") ||
-        (d.neighborhood == "West Roxbury") ||
-        (d.neighborhood == "East Boston")) {
-        return d.neighborhood
-      }
+      return d.neighborhood
     })
 
   var rightSlopeCircle = $slopeGroups.append("circle")
     .attr('class', 'slope-circle right-slope-circle')
     .attr('id', d => `right-circle-${d.zip}`)
     .attr("r", radius)
-    .attr("cx", boundedWidth)
-    .attr("cy", d => yScale(d.per_black_stopped_within_blacks))
+    .attr('cx', d => xScale(d.per_black_stopped_within_blacks))
+    .attr("cy", d => yScale(d.neighborhood))
+    .attr('fill', d => populationScale(d['%black']))
 
-  var rightSlopeLabels = $slopeGroups.append("g")
-    .attr("class", "slope-label slope-label-right")
-    .each(function (d) {
-      d.xRightPosition = boundedWidth + config.labelGroupOffset;
-      d.yRightPosition = yScale(d.per_black_stopped_within_blacks);
-    });
+  // var rightSlopeLabels = $slopeGroups.append("g")
+  //   .attr("class", "slope-label slope-label-right")
+  //   .each(function (d) {
+  //     d.xRightPosition = boundedWidth + config.labelGroupOffset;
+  //     d.yRightPosition = yScale(d.per_black_stopped_within_blacks);
+  //   });
 
   //   rightSlopeLabels.append("text")
   //     .attr("class", "label-figure")
@@ -164,39 +199,30 @@ function drawChart(data) {
   //     .attr("text-anchor", "start")
   //     .text(d => (d.values[1].max / d.values[1].min).toPrecision(3));
 
-  rightSlopeLabels.append("text")
-    .attr("class", "slope-label-right-text")
-    .attr('id', d => `right-label-${d.zip}`)
-    .attr("x", d => d.xRightPosition)
-    .attr("y", d => d.yRightPosition)
-    .attr("dx", config.labelKeyOffset)
-    .attr("dy", 3)
-    .attr("text-anchor", "start")
-    .text(d => {
-      if ((d.neighborhood !== "South End") &&
-        (d.neighborhood !== "Dorchester(02125)") &&
-        (d.neighborhood !== "Brighton") &&
-        (d.neighborhood !== "West Roxbury") &&
-        (d.neighborhood !== "East Boston")) {
-        return d.neighborhood
-      }
-    })
+  // rightSlopeLabels.append("text")
+  //   .attr("class", "slope-label-right-text")
+  //   .attr('id', d => `right-label-${d.zip}`)
+  //   .attr("x", d => d.xRightPosition)
+  //   .attr("y", d => yScale(d.neighborhood))
+  //   .attr("dx", config.labelKeyOffset)
+  //   .attr("dy", 3)
+  //   .attr("text-anchor", "start")
+  //   .text(d => {
+  //     return d.neighborhood
+  //   })
 
+  // $titles.append("text")
+  //   .attr("text-anchor", "middle")
+  //   .attr("x", MARGIN.left)
+  //   .attr("dx", 0)
+  //   .attr("dy", MARGIN.top)
+  //   .text(config.leftTitle);
 
-
-
-  $titles.append("text")
-    .attr("text-anchor", "middle")
-    .attr("x", MARGIN.left)
-    .attr("dx", 0)
-    .attr("dy", MARGIN.top)
-    .text(config.leftTitle);
-
-    $titles.append("text")
-    .attr("x", MARGIN.left+boundedWidth)
-    .attr("dx", 0)
-    .attr("dy", MARGIN.top)
-    .text(config.rightTitle);
+  //   $titles.append("text")
+  //   .attr("x", MARGIN.left+boundedWidth)
+  //   .attr("dx", 0)
+  //   .attr("dy", MARGIN.top)
+  //   .text(config.rightTitle);
 }
 
 function updateDimensions() {
@@ -204,7 +230,7 @@ function updateDimensions() {
     w = window.innerWidth
   const isMobile = w <= 600 ? true : false
   height = isMobile ? Math.floor(h * 0.9) : Math.floor(h * 0.95)
-  width = isMobile ? w * 0.95 : w * 0.6
+  width = isMobile ? w * 0.95 : w * 0.4
   boundedHeight = height - MARGIN.top - MARGIN.bottom
   boundedWidth = width - MARGIN.left - MARGIN.right
 }

@@ -12,9 +12,9 @@ const $xAxis = $svg.select('.x-axis')
 const $yAxis = $svg.select('.y-axis')
 
 const MARGIN = {
-  top: 10,
+  top: 30,
   right: 10,
-  bottom: 30,
+  bottom: 50,
   left: 60
 }
 let height = 0, 
@@ -53,7 +53,7 @@ function resetLine(){
 }
 
 function drawChart(){
-  $svg.selectAll('.label').remove()
+  $gVis.selectAll('.label').remove()
 
   xScale
     .domain(dataset.map(d => d.year))
@@ -65,19 +65,21 @@ function drawChart(){
     .call(d3.axisBottom(xScale))
   yAxis = $yAxis
     .attr('transform', `translate(${MARGIN.left}, ${MARGIN.top})`)
-    .call(d3.axisLeft(yScale))
+    .call(d3.axisLeft(yScale).tickSize(-(boundedWidth)).ticks(5))
   
-  const yLabel = $svg.append('text')
+  const yLabel = $gVis.append('text')
     .attr('class', 'label y-label')
-    .text('Number of people')
-    .attr('transform', `rotate(-90)`)
-    .attr('y', 12)
-    .attr('x', -(height/2))
-    .attr('text-anchor', 'middle')
-  const xLabel = $svg.append('text')
+    .selectAll('tspan')
+    .data(['Number', 'of', 'people'])
+    .enter().append('tspan')
+   yLabel
+    .text(d => d)
+    .attr('x', -35)
+    .attr('y', (d, i) => i * 12)
+  const xLabel = $gVis.append('text')
     .attr('class', 'label', 'x-label')
     .text('Year')
-    .attr('transform', `translate(${MARGIN.left + boundedWidth/2}, ${MARGIN.top + boundedHeight + 30})`)
+    .attr('transform', `translate(${boundedWidth/2}, ${boundedHeight + 40})`)
     .attr('text-anchor', 'middle')
   
   const lineGen = d3.line()

@@ -10,6 +10,8 @@ phone = "(max-width: 767px)"
 
 #content
     line-height 24px
+    p   
+        font-size 2rem 
 
 #warren-scroll 
     position relative
@@ -101,28 +103,49 @@ phone = "(max-width: 767px)"
         .graphic
             position relative
             .map-title
-                text-align center
+                // text-align center
             .crime-stop-map, .stop-black-map
                 position relative
-                .map-legend
+                .map-legend-group
+                    width 25%
+                    height 25%
+                    right 15%
+                    bottom 5%
                     position absolute
-                    line-height 1em
-                    font-size 12px
-                    @media phone
-                        font-size 8px
-                .top 
-                    top 61%
-                    left 65%
-                .right 
-                    top 75%
-                    left 83%
-                .bottom
-                    top 90%
-                    left 65%
-                .left 
-                    top 75%
-                    left 45%
-                    text-align right
+                    .wrapper
+                        position relative
+                    .map-legend
+                        position absolute
+                        line-height 1em
+                        font-size 12px
+                        width fit-content
+                        @media phone
+                            font-size 8px
+                    .top 
+                        top -8%
+                        left: 50%;
+                        -webkit-transform translateX(-50%)
+                        -ms-transform translateX(-50%)
+                        transform translate(-50%, 0)  
+                    .right 
+                        right -15%
+                        bottom 50%
+                        -webkit-transform translate(50%, 50%)
+                        -ms-transform translate(50%, 50%)
+                        transform translate(50%, 50%)
+                    .bottom
+                        bottom -8%
+                        left: 50%;
+                        -webkit-transform translateX(-50%)
+                        -ms-transform translateX(-50%)
+                        transform translate(-50%, 0)  
+                    .left 
+                        bottom 50%
+                        left -15%
+                        -webkit-transform translate(-50%, 50%)
+                        -ms-transform translate(-50%, 50%)
+                        transform translate(-50%, 50%)
+                   
             // .small-map-one
             //     grid-area sideOne 
             //     justify-self start
@@ -203,6 +226,10 @@ phone = "(max-width: 767px)"
                 position relative
                 display none
                 text-align center
+                .x-axis .tick line
+                    opacity 0.2
+                .y-axis .domain
+                    visibility hidden
                 .tool-tip 
                     background-color rgba(255,255,255,1)
                     stroke rgb(0,0,0)
@@ -214,7 +241,7 @@ phone = "(max-width: 767px)"
                 .black-stop-container
                     display grid
                     justify-content center
-                .slope-circle
+                .left-slope-circle
                     fill rgba(255,255,255,1)
                     stroke rgb(0,0,0)
                     stroke-width 1
@@ -225,7 +252,7 @@ phone = "(max-width: 767px)"
                     font-size 16px
                 .legend-text
                     font-family $sans
-                    font-size 16px
+                    font-size 12px
     .assigned-person
         font-size 50px
         width 80%
@@ -259,10 +286,7 @@ phone = "(max-width: 767px)"
 #conclude
     display none
 
-// .white-color
-//     color #9650A9
-// .black-color
-//     color #8DB77D
+
 .selected-person
     opacity 1
     background-color rgba(0,0,0,0.9)
@@ -274,12 +298,12 @@ phone = "(max-width: 767px)"
 
 .scroll__text
     margin-top 20rem
+    max-width 50%
 
 .step
     position relative
     z-index 999
     height 60vh
-    max-width $column-width
     margin 5rem 2rem
     p
         background-color rgba(255,255,255,1)    
@@ -288,7 +312,7 @@ phone = "(max-width: 767px)"
         line-height 1.6em
 
 .graphic, .scroll__graphic
-        margin 3rem auto
+        margin 3rem 1rem
 
 .scroll__graphic
     width 50%
@@ -299,10 +323,14 @@ svg
     .axis
         .domain
             stroke rgba(0,0,0,0.8)
+            visibility hidden
         .tick line
-            opacity 0
+            opacity 0.2
         .tick text
             fill rgba(0,0,0,0.8)
+    .x-axis
+        .tick line
+            opacity 0
     .label
         font-family $sans
         font-size 12px

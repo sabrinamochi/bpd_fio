@@ -52,42 +52,42 @@ let currentStep = 'assigned-person', currentRaceStep = 'remind-race';
 const STEP = {
   'assigned-person': () => {},
   'overall-boston': () => {
-    $gVis.selectAll('.stop-circle')
+    $gVis.selectAll('.stop-bar')
       .attr('opacity', 0.05)
-    $gVis.select('#boston')
+    $gVis.selectAll('.boston-avg')
       .attr('opacity', 1)
   },
   'black-pop': () => {},
   'your-neighborhood-chance': () => {
-    $gVis.selectAll('.stop-circle')
+    $gVis.selectAll('.stop-bar')
     .attr('opacity', 0.05)
-    $gVis.select('#boston')
-    .attr('opacity', 1)
+    $gVis.selectAll('.boston-avg')
+      .attr('opacity', 0)
     if (race == 'black') {
-      $gVis.select('#stop-circle-2119')
+      $gVis.select('#stop-bar-2119')
         .attr('opacity', 1)
     } else {
-      $gVis.select('#stop-circle-2134')
+      $gVis.select('#stop-bar-2134')
         .attr('opacity', 1)
     }
     $tooltip
     .style('visibility', 'hidden')
   },
   'explain': () => {
-    $gVis.selectAll('.stop-circle')
+    $gVis.selectAll('.stop-bar')
       .attr('opacity', 0.05)
       .on('mouseover', () => {
           return;
       })
-    $gVis.select('#stop-circle-2119')
+    $gVis.select('#stop-bar-2119')
         .attr('opacity', 1)
-    $gVis.select('#stop-circle-2121')
+    $gVis.select('#stop-bar-2121')
         .attr('opacity', 1)
   },
   'explore': () => {
-    $gVis.selectAll('.stop-circle')
+    $gVis.selectAll('.stop-bar')
       .attr('opacity', 1)
-    $gVis.selectAll('.stop-circle')
+    $gVis.selectAll('.stop-bar')
         .on('mouseover', d => {
             $tooltip
             .style('left', `${d.clientX}px`)
@@ -107,14 +107,14 @@ const STEP = {
 
 const RACE_STEP = {
     'remind-race':() => {
-        $raceGVis.selectAll('circle')
+        $raceGVis.selectAll('.slope-circle')
             .attr('opacity', 0.1)
 
         $raceGVis.selectAll('.slope-line')
             .attr('opacity', 0.1)
     },
     'your-race-in-boston': () => {
-        $raceGVis.selectAll('circle')
+        $raceGVis.selectAll('.slope-circle')
             .attr('opacity', 0.1)
         $raceGVis.selectAll('.slope-line')
             .attr('opacity', 0.1)
@@ -132,7 +132,7 @@ const RACE_STEP = {
         }
     }, 
     'if-another':() => {
-        $raceGVis.selectAll('circle')
+        $raceGVis.selectAll('.slope-circle')
             .attr('opacity', 0.1)
         $raceGVis.selectAll('.slope-line')
             .attr('opacity', 0.1)
@@ -142,7 +142,7 @@ const RACE_STEP = {
             .attr('opacity', 1)
             $raceGVis.select('#right-circle-2119')
             .attr('opacity', 1)
-                .attr('r', 2)
+                .attr('r', 5)
             $raceGVis.select('#left-circle-2119')
             .attr('opacity', 1)
                 .attr('r', 5)
@@ -152,7 +152,7 @@ const RACE_STEP = {
             .attr('opacity', 1)
             $raceGVis.select('#left-circle-2134')
             .attr('opacity', 1)
-                .attr('r', 2)
+                .attr('r', 5)
             $raceGVis.select('#right-circle-2134')
             .attr('opacity', 1)
                 .attr('r', 5)
@@ -160,7 +160,7 @@ const RACE_STEP = {
         }
     }, 
     'more-black-area': () => {
-        $raceGVis.selectAll('circle')
+        $raceGVis.selectAll('.slope-circle')
             .attr('opacity', 0.1)
         $raceGVis.selectAll('.slope-line')
             .attr('opacity', 0.1)
@@ -175,9 +175,9 @@ const RACE_STEP = {
         $raceGVis.select('#right-circle-2121').attr('opacity', 1)
     },
     'more-white-area': () => {
-        $raceGVis.selectAll('circle')
+        $raceGVis.selectAll('.slope-circle')
             .attr('opacity', 0.1)
-            .attr('r', 2)
+            .attr('r', 5)
             .style('stroke-width', 1)
         $raceGVis.selectAll('.slope-line')
             .attr('opacity', 0.1)
@@ -189,9 +189,9 @@ const RACE_STEP = {
         $raceGVis.select('#right-circle-2135').attr('opacity', 1)
     },
     'explore-race':() => {
-        $raceGVis.selectAll('circle')
+        $raceGVis.selectAll('.slope-circle')
             .attr('opacity', 1)
-            .attr('r', 2)
+            .attr('r', 5)
             .style('stroke-width', 1)
         $raceGVis.selectAll('.slope-line')
             .attr('opacity', 1)

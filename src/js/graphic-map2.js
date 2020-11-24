@@ -53,7 +53,7 @@ import * as topojson from 'topojson';
 //   left: 5
 // }
 // let boundedWidth, boundedHeight;
-let stopData, geoData;
+// let stopData, geoData;
 
 // let isMobile;
 
@@ -87,20 +87,20 @@ let stopData, geoData;
 //     .domain([minNum1, maxNum1])
 //     .range(['low', 'medium', 'high'])
 //   const percentScale2 = d3.scaleThreshold()
-//     .domain([33, 66])
+//     .domain([minNum2, maxNum2])
 //     .range(['low', 'medium', 'high'])
 
 //   const bivariateColorScale = d3.scaleOrdinal()
 //     .domain([
-//       'high_high',
-//       'high_medium',
-//       'high_low',
-//       'medium_high',
-//       'medium_medium',
+//       'low_low',
 //       'medium_low',
-//       'low_high',
+//       'high_low',
 //       'low_medium',
-//       'low_low'
+//       'medium_medium',
+//       'high_medium',
+//       'low_high',
+//       'medium_high',
+//       'high_high'
 //     ])
 //     .range(colorRange)
 
@@ -131,28 +131,7 @@ let stopData, geoData;
 //   // let title = ''
 //   // $title.html(title)
 
-//   const crimeStopColorRange = [
-//     "#491800", // high prop1, high prop2
-//     "#455778",
-//     "#427ec1", // high prop1, low prop2
-//     "#992000",
-//     "#91757d", // medium prop1, medium prop2
-//     "#8ba9ca",
-//     "#e82800", // low prop1, high prop2
-//     "#db9283",
-//     "#d3d3d3" // low prop1, low prop2
-//   ]
-//   const stopBlackColorRange = [
-//     "#731608",
-//     "#99180c",
-//     "#bd1b0f",
-//     "#7b6946",
-//     "#a37864",
-//     "#ca8681",
-//     "#80a672",
-//     "#aabda3",
-//     "#d3d3d3"
-//   ]
+//   const stopBlackColorRange = ["#d3d3d3", "#d09696", "#ce4e4e", "#a4b6b8", "#a28183", "#a04344", "#75999d", "#746d70", "#72393a"]
 
 //   const map = $gBiMap.selectAll(".map-path")
 //     .data(topojson.feature(geoData, geoData.objects["ZIP_Codes (1)"]).features)
@@ -167,12 +146,12 @@ let stopData, geoData;
 //     })
 //     .attr("d", d => biGeoPath(d))
 //     .attr("stroke", "black")
+//     .attr('stroke-width', 0.5)
 //     .attr("fill", d => biMapFill(d, "stopped_per", "percent_black", stopBlackColorRange))
 
 //   const mapMerge = mapEnter.merge(map)
 
 //   const boundary = document.querySelector('#dorchester').getBBox()
-
 
 //   const legendTop = isMobile ? 50 : boundary.y + boundary.height + 30
 //   const legendLeft = isMobile ? boundedWidth / 2 : boundary.x + boundary.width + 70
@@ -226,9 +205,9 @@ let stopData, geoData;
 //   const h = window.innerHeight;
 //   const w = window.innerWidth;
 //   isMobile = w <= 767 ? true : false
-//   height = isMobile ? Math.floor(h * 0.4) : Math.floor(h * 0.7)
-//   width = $graphic.node().offsetWidth
-//   biScale = isMobile ? 60000 : 130000
+//   height = isMobile ? Math.floor(h * 0.4) : Math.floor(h * 0.8)
+//   width = w * 0.8
+//   biScale = isMobile ? 60000 : 150000
 //   smallScale = isMobile ? 13000 : 35000
 //   boundedWidth = width - MARGIN.left - MARGIN.right;
 //   boundedHeight = height - MARGIN.top - MARGIN.bottom;
@@ -274,29 +253,29 @@ function resize() {
 }
 
 function init() {
-  loadData(['shape_with_stops.csv', 'ZIP_Codes.json']).then(result => {
-    stopData = result[0].filter(d => +d.resident_employee_ratio >= 1)
-    geoData = result[1]
+  // loadData(['shape_with_stops.csv', 'ZIP_Codes.json']).then(result => {
+  //   stopData = result[0].filter(d => +d.resident_employee_ratio >= 1)
+  //   geoData = result[1]
 
-    geoData.objects["ZIP_Codes (1)"].geometries.forEach(g => {
-      stopData.forEach(d => {
-        if ("0" + String(d.zip) == g.properties.ZIP5) {
-          g.properties.total_population = +d["population"]
-          g.properties.black_pop = +d["black_pop"]
-          g.properties.white_pop = +d["white_pop"]
-          g.properties.percent_black = +d["%black"]
-          g.properties.percent_white = +d["%white"]
-          g.properties.num_of_stop = +d["num_of_stops"]
-          g.properties.stopped_per = +d["stopped_per"]
-          g.properties.per_black_stopped_within_blacks = +d["per_black_stopped_within_blacks"]
-          g.properties.per_white_stopped_within_whites = +d["per_white_stopped_within_whites"]
-          g.properties.crime = +d["crime"]
-          g.properties.neighborhood = +d["Name"].split(", ")[1]
-        }
-      })
-    })
-    resize()
-  }).catch(console.error);
+  //   geoData.objects["ZIP_Codes (1)"].geometries.forEach(g => {
+  //     stopData.forEach(d => {
+  //       if ("0" + String(d.zip) == g.properties.ZIP5) {
+  //         g.properties.total_population = +d["population"]
+  //         g.properties.black_pop = +d["black_pop"]
+  //         g.properties.white_pop = +d["white_pop"]
+  //         g.properties.percent_black = +d["%black"]
+  //         g.properties.percent_white = +d["%white"]
+  //         g.properties.num_of_stop = +d["num_of_stops"]
+  //         g.properties.stopped_per = +d["stopped_per"]
+  //         g.properties.per_black_stopped_within_blacks = +d["per_black_stopped_within_blacks"]
+  //         g.properties.per_white_stopped_within_whites = +d["per_white_stopped_within_whites"]
+  //         g.properties.crime = +d["crime"]
+  //         g.properties.neighborhood = +d["Name"].split(", ")[1]
+  //       }
+  //     })
+  //   })
+  //   resize()
+  // }).catch(console.error);
 
 }
 

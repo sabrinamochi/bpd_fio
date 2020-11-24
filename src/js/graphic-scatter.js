@@ -19,7 +19,7 @@ let height = 0,
 const MARGIN = {
   top: 20,
   right: 10,
-  bottom: 30,
+  bottom: 50,
   left: 60
 }
 let boundedWidth, boundedHeight;
@@ -50,10 +50,11 @@ function getColor() {
 
 
 function drawChart() {
-  $svg.selectAll('.label').remove()
   $gVis.selectAll('.neighborhood').remove()
   $gVis.selectAll('.more-black-text').remove()
   $gVis.selectAll('.more-white-text').remove()
+  $gVis.selectAll('.label').remove()
+  $gVis.selectAll('.usa-average').remove()
   xScale
     .domain(d3.extent(dataset, d => d.crime))
   yScale
@@ -63,29 +64,50 @@ function drawChart() {
     .call(d3.axisBottom(xScale))
   yAxis = $yAxis
     .attr('transform', `translate(${MARGIN.left}, ${MARGIN.top})`)
-    .call(d3.axisLeft(yScale))
-  const yLabel = $svg.append('text')
+    .call(d3.axisLeft(yScale).tickSize(-(boundedWidth)).ticks(5))
+  const yLabel = $gVis.append('text')
     .attr('class', 'label y-label')
-    .text('Stops per 100 People')
-    .attr('transform', `rotate(-90)`)
-    .attr('y', 12)
-    .attr('x', -(height / 2))
-    .attr('text-anchor', 'middle')
-  const xLabel = $svg.append('text')
+    .selectAll('.y-label-tspan')
+    .data(['Stops', 'per', '100 people'])
+    .enter().append('tspan')
+  yLabel
+    .text(d => d)
+    // .attr('transform', `rotate(-90)`)
+    // .attr('y', 12)
+    .attr('x', -10)
+    .attr('y', (d, i) => i * 15)
+  const xLabel = $gVis.append('text')
     .attr('class', 'label', 'x-label')
     .text('Crime Index')
-    .attr('transform', `translate(${MARGIN.left + boundedWidth/2}, ${MARGIN.top + boundedHeight + 30})`)
+    .attr('transform', `translate(${boundedWidth/2}, ${height - 20})`)
     .attr('text-anchor', 'middle')
+
+  const usaAvg = $gVis.append('g')
+    .attr('class', 'usa-average')
+  usaAvg
+    .append('line')
+    .attr('x1', xScale(100))
+    .attr('x2', xScale(100))
+    .attr('y1', boundedHeight)
+    .attr('y2', 0)
+    .attr('stroke', 'rgba(0,0,0,0.5)')
+    .attr('stroke-dasharray', '4 1')
+  usaAvg.append('text')
+    .text('USA average')
+    .attr('x', xScale(101))
+    .attr('y', yScale(3.5))
+    .attr('fill', 'rgba(0,0,0,0.5)')
 
   const colorScale = getColor()
 
   function handleMouseOver(d) {
+  
     const x = d3.select(this).attr('cx')
     const y = d3.select(this).attr('cy')
     const selDot = d3.select(this).datum()
     $tip
       .style("left", x + "px")
-      .style("top", (y) + "px")
+      .style("top", y + "px")
       .style("visibility", "visible")
       .html(function () {
         return '<div>' +
@@ -94,9 +116,9 @@ function drawChart() {
       })
   }
 
-  function handleMouseOut(d){
+  function handleMouseOut(d) {
     $tip
-    .style("visibility", "hidden")
+      .style("visibility", "hidden")
   }
 
   const $neighborhood = $gVis.selectAll('.neighborhood')
@@ -119,16 +141,16 @@ function drawChart() {
     .attr('class', d => {
       if (+d["%black"] / 100 >= 0.5) {
         return 'more-black-text'
-      } else if (d.neighborhood == 'Brighton' || d.neighborhood == 'Allston' 
-                || d.neighborhood == 'East Boston' || d.neighborhood == 'North End') {
+      } else if (d.neighborhood == 'Brighton' || d.neighborhood == 'Allston' ||
+        d.neighborhood == 'East Boston' || d.neighborhood == 'North End') {
         return 'more-white-text'
       } else {
         return;
       }
     })
     .text(d => {
-      if (+d["%black"] / 100 >= 0.5 || (d.neighborhood == 'Brighton' || d.neighborhood == 'Allston' 
-      || d.neighborhood == 'East Boston' || d.neighborhood == 'North End')) {
+      if (+d["%black"] / 100 >= 0.5 || (d.neighborhood == 'Brighton' || d.neighborhood == 'Allston' ||
+          d.neighborhood == 'East Boston' || d.neighborhood == 'North End')) {
         return d.neighborhood
       } else {
         return;
@@ -163,10 +185,20 @@ function drawChart() {
 
 
 const scroller = scrollama()
-let currentStep = 'high-crime'
+let currentStep = 'explain'
 
 const STEP = {
+  'explain': () => {
+    $gVis.select('.usa-average').attr('opacity', 1)
+    $gVis.selectAll('.neighborhood')
+      .attr('fill', d => d.color)
+    $gVis.selectAll('.more-white-text')
+      .attr('opacity', 0)
+    $gVis.selectAll('.more-black-text')
+      .attr('opacity', 0)
+  },
   'high-crime': () => {
+    $gVis.select('.usa-average').attr('opacity', 0)
     const colorScale = getColor()
     $gVis.selectAll('.neighborhood')
       .attr('fill', d => {
@@ -187,8 +219,8 @@ const STEP = {
     const colorScale = getColor()
     $gVis.selectAll('.neighborhood')
       .attr('fill', d => {
-        if ((d.neighborhood == 'Brighton' || d.neighborhood == 'Allston' 
-        || d.neighborhood == 'East Boston' || d.neighborhood == 'North End')) {
+        if ((d.neighborhood == 'Brighton' || d.neighborhood == 'Allston' ||
+            d.neighborhood == 'East Boston' || d.neighborhood == 'North End')) {
           return d.color
         } else {
           return 'rgba(0,0,0,0.1)'
@@ -210,21 +242,6 @@ function handleStepEnter({
   STEP[currentStep]();
 }
 
-function handleStepExit({
-    index,
-    element,
-    direction
-  }) {
-    if (index == 0 && direction === 'up'){
-        $gVis.selectAll('.neighborhood')
-            .attr('fill', d => d.color)
-        $gVis.selectAll('.more-white-text')
-            .attr('opacity', 0)
-        $gVis.selectAll('.more-black-text')
-            .attr('opacity', 0)
-
-    }
-  }
 
 function setupScroller() {
   Stickyfill.add($graphic.node());
@@ -233,7 +250,7 @@ function setupScroller() {
       offset: 0.5
     })
     .onStepEnter(handleStepEnter)
-    .onStepExit(handleStepExit)
+
 }
 
 function updateDimensions() {
@@ -252,7 +269,7 @@ function updateDimensions() {
     .range([0, boundedWidth])
   yScale
     .range([boundedHeight, 0])
-  
+
 }
 
 function resize() {

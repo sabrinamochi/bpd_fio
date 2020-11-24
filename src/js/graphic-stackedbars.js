@@ -69,7 +69,7 @@ function drawChart(){
     .paddingInner(0.5)
   const colorScale = d3.scaleOrdinal()
     .domain(['Black', 'white', 'others'])
-    .range(['#8DB77D', '#9650A9', '#C4C4C4'])
+    .range(['#81A8AD', '#E8AA46', '#C4C4C4']) 
 
   const $popBars = $gPop.selectAll('.pop-bars')
     .data([popData])

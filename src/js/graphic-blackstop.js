@@ -10,63 +10,97 @@ const $gLegend = $svg.select('.legend')
 let height = 0,
   width = 0
 const MARGIN = {
-  top: 10,
+  top: 100,
   right: 10,
-  bottom: 30,
-  left: 10
+  bottom: 100,
+  left: 100
 }
 let boundedHeight, boundedWidth;
 
 let dataset;
 
 
-const stopRScale = d3.scaleSqrt(),
+const stopScale = d3.scaleLinear(),
+  areaScale = d3.scaleBand(),
   populationScale = d3.scaleLinear()
 
-  function drawChart(data) {
+function drawChart(data) {
 
-    $gVis.selectAll("*").remove()
-    $gLegend.selectAll("*").remove()
+  $gVis.selectAll("*").remove()
+  $gLegend.selectAll("*").remove()
 
-    stopRScale
-      .domain(d3.extent(dataset, d => +d.stopped_per))
-      .range([4, boundedWidth / 4])
-  
-    populationScale
-      .domain(d3.extent(dataset, d => +d["%black"]))
-      .range(['#9650A9', '#8DB77D'])
-  
-    //radials
-    $gVis.selectAll(".stop-circle")
-      .data(data)
-      .enter()
-      .append("circle")
-      .attr('class', 'stop-circle')
-      .attr('id', d => {
-        return `stop-circle-${d.zip}`
-      })
-      .attr('cx', boundedWidth / 2)
-      .attr('transform', d => `translate(0, ${boundedHeight-stopRScale(d["stopped_per"])})`)
-      .attr("r", d => stopRScale(d["stopped_per"]))
-      .attr("stroke", d => populationScale(d["%black"]))
-      .attr('fill', 'none')
-      .attr('opacity', 0.05)
-      .attr('stroke-width', 2)
-  
-    $gVis.append('circle')
-      .attr('class', 'stop-circle')
-      .attr('id', 'boston')
-      .attr('cx', boundedWidth / 2)
-      .attr('transform', d => `translate(0, ${boundedHeight-stopRScale(1)})`)
-      .attr("r", d => stopRScale(1))
-      .attr('stroke', 'black')
-      .attr('stroke-dasharray', '3,3')
-      .attr('stroke-width', 2)
-      .attr('fill', 'none')
-      .attr('opacity', 0)
+  // Add X axis
+  stopScale
+    .domain(d3.extent(dataset, d => +d.stopped_per))
+    .range([0, boundedWidth])
+
+  $gVis.append("g")
+    .attr('class', 'axis x-axis')
+    .attr("transform", `translate(0, ${boundedHeight})`)
+    .call(d3.axisBottom(stopScale).tickSize(-boundedHeight).ticks(5))
+    .selectAll("text")
+    .style("text-anchor", "end")
     
-    // legend
-    const colorData = [{
+
+  // Y axis
+  areaScale
+    .range([0, boundedHeight])
+    .domain(dataset.map(function (d) {
+      return d.neighborhood;
+    }))
+    .padding(.1);
+  
+  $gVis.append("g")
+  .attr('class', 'axis y-axis')
+    .call(d3.axisLeft(areaScale))
+
+  populationScale
+    .domain(d3.extent(dataset, d => +d["%black"]))
+    .range(['#E8AA46', '#81A8AD'])
+
+  //Bars
+  $gVis.selectAll("rect")
+    .data(dataset)
+    .enter()
+    .append("rect")
+    .attr('class', 'stop-bar')
+    .attr('id', d => {
+      if(d.zip === '2134'){
+        return 'stop-bar-2134'
+      } else if (d.zip === '2119'){
+        return 'stop-bar-2119'
+      } else if (d.zip === '2121'){
+        return 'stop-bar-2121'
+      }
+    })
+    .attr("x", stopScale(0))
+    .attr("y", function (d) {
+      return areaScale(d.neighborhood);
+    })
+    .attr("width", function (d) {
+      return stopScale(d.stopped_per);
+    })
+    .attr("height", areaScale.bandwidth())
+    .attr("fill", d => populationScale(d["%black"]))
+
+
+  $gVis.append('line')
+    .attr('class', 'boston-avg')
+    .attr('x1', stopScale(1))
+    .attr('x2', stopScale(1))
+    .attr('y1', boundedHeight)
+    .attr('y2', 0)
+    .attr('stroke', 'rgba(0,0,0,0.8)')
+  
+  $gVis.append('text')
+    .attr('class', 'boston-avg')
+    .text('Boston Average')
+    .attr('x', stopScale(1.1))
+    .attr('y', boundedHeight/2)
+
+
+  // legend
+  const colorData = [{
       color: populationScale.range()[0],
       value: populationScale.domain()[0]
     },
@@ -74,47 +108,50 @@ const stopRScale = d3.scaleSqrt(),
       color: populationScale.range()[1],
       value: populationScale.domain()[1]
     }
-    ]
-    var extent = d3.extent(colorData, d => d.value);
-    var defs = $svg.append("defs");
-    var linearGradient = defs.append("linearGradient").attr("id", "legendGradient");
-    linearGradient.selectAll("stop")
-        .data(colorData)
-      .enter().append("stop")
-        .attr("offset", d => ((d.value - extent[0]) / (extent[1] - extent[0]) * 100) + "%")
-        .attr("stop-color", d => d.color);
-    $gLegend.attr('transform', `translate(${MARGIN.left}, ${MARGIN.top + boundedHeight / 8})`)
-    const rectWidth = 400
-    const rectHeight = 30
-    $gLegend.append("rect")
-        .attr('class', 'legend-rect')
-        .attr('x', boundedWidth/2 - rectWidth/2)
-        .attr("width", rectWidth)
-        .attr("height", rectHeight)
-        .style("fill", "url(#legendGradient)");
-    
-    $gLegend.append('text')
-      .text('more White residents')
-      .attr('x', boundedWidth/2 - rectWidth/2)
-      .attr('dy', -1)
-      .attr('class', 'legend-text')
-    
-    $gLegend.append('text')
-      .text('more Black residents')
-      .attr('x', boundedWidth/2 - rectWidth/2 + rectWidth)
-      .attr('dy', -1)
-      .attr('text-anchor', 'end')
-      .attr('class', 'legend-text')
+  ]
+  var extent = d3.extent(colorData, d => d.value);
+  var defs = $svg.append("defs");
+  var linearGradient = defs.append("linearGradient").attr("id", "legendGradient");
+  linearGradient.selectAll("stop")
+    .data(colorData)
+    .enter().append("stop")
+    .attr("offset", d => ((d.value - extent[0]) / (extent[1] - extent[0]) * 100) + "%")
+    .attr("stop-color", d => d.color);
   
-  }
-  
+  const rectWidth = boundedWidth*0.4
+  const rectHeight = 30
+  $gLegend.attr('transform', `translate(${MARGIN.left}, ${height - rectHeight})`)
+  $gLegend.append("rect")
+    .attr('class', 'legend-rect')
+    .attr('x', boundedWidth / 2 - rectWidth / 2)
+    .attr("width", rectWidth)
+    .attr("height", rectHeight)
+    .style("fill", "url(#legendGradient)");
+
+  $gLegend.append('text')
+    .text('more Whites')
+    .attr('x', boundedWidth / 2 - rectWidth / 2)
+    .attr('dy', -1)
+    .attr('class', 'legend-text')
+
+
+  $gLegend.append('text')
+    .text('more Blacks')
+    .attr('x', boundedWidth / 2 - rectWidth / 2 + rectWidth)
+    .attr('dy', -1)
+    .attr('text-anchor', 'end')
+    .attr('class', 'legend-text')
+    
+
+}
+
 
 function updateDimensions() {
   const h = window.innerHeight,
     w = window.innerWidth
   const isMobile = w <= 600 ? true : false
   height = isMobile ? Math.floor(h * 0.5) : Math.floor(h * 0.8);
-  width = isMobile ? w * 0.9 : w * 0.6
+  width = isMobile ? w * 0.9 : w * 0.4
   boundedHeight = height - MARGIN.top - MARGIN.bottom
   boundedWidth = width - MARGIN.left - MARGIN.right
 
@@ -132,13 +169,12 @@ function init() {
   loadData('shape_with_stops.csv').then(result => {
     dataset = result.filter(d => +d.resident_employee_ratio >= 1)
     dataset.map(d => {
-      if (d.Name.split(", ")[1] === "Dorchester"){
+      if (d.Name.split(", ")[1] === "Dorchester") {
         d.neighborhood = `${d.Name.split(", ")[1]}(${d.Name.split(", ")[0]})`
-      }
-      else {
+      } else {
         d.neighborhood = `${d.Name.split(", ")[1]}`
       }
-      
+
     })
     dataset.sort((a, b) => +b["stopped_per"] - (+a["stopped_per"]))
     resize()
