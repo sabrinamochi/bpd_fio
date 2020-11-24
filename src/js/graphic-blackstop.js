@@ -151,7 +151,7 @@ function updateDimensions() {
     w = window.innerWidth
   const isMobile = w <= 600 ? true : false
   height = isMobile ? Math.floor(h * 0.5) : Math.floor(h * 0.8);
-  width = isMobile ? w * 0.9 : w * 0.4
+  width = $widthRef.node().offsetWidth
   boundedHeight = height - MARGIN.top - MARGIN.bottom
   boundedWidth = width - MARGIN.left - MARGIN.right
 
