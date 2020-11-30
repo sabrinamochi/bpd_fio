@@ -10,12 +10,13 @@ const $gLegend = $svg.select('.legend')
 let height = 0,
   width = 0
 const MARGIN = {
-  top: 100,
+  top: 150,
   right: 10,
   bottom: 100,
   left: 100
 }
 let boundedHeight, boundedWidth;
+let isMobile;
 
 let dataset;
 
@@ -37,10 +38,16 @@ function drawChart(data) {
   $gVis.append("g")
     .attr('class', 'axis x-axis')
     .attr("transform", `translate(0, ${boundedHeight})`)
-    .call(d3.axisBottom(stopScale).tickSize(-boundedHeight).ticks(5))
+    .call(d3.axisBottom(stopScale).tickSize(-boundedHeight).ticks(5).tickFormat(x => `${x}%`))
     .selectAll("text")
-    .style("text-anchor", "end")
-    
+    .style("text-anchor", "middle")
+
+  const xLabel = $gVis.append('g')
+    .attr('transform', `translate(${boundedWidth / 2}, ${boundedHeight + 30})`)
+    .append('text')
+      .attr('text-anchor', 'middle')
+      .attr('class', 'label x-label')
+      .text('Chances of getting stopped')
 
   // Y axis
   areaScale
@@ -49,9 +56,9 @@ function drawChart(data) {
       return d.neighborhood;
     }))
     .padding(.1);
-  
+
   $gVis.append("g")
-  .attr('class', 'axis y-axis')
+    .attr('class', 'axis y-axis')
     .call(d3.axisLeft(areaScale))
 
   populationScale
@@ -65,11 +72,11 @@ function drawChart(data) {
     .append("rect")
     .attr('class', 'stop-bar')
     .attr('id', d => {
-      if(d.zip === '2134'){
+      if (d.zip === '2134') {
         return 'stop-bar-2134'
-      } else if (d.zip === '2119'){
+      } else if (d.zip === '2119') {
         return 'stop-bar-2119'
-      } else if (d.zip === '2121'){
+      } else if (d.zip === '2121') {
         return 'stop-bar-2121'
       }
     })
@@ -83,7 +90,6 @@ function drawChart(data) {
     .attr("height", areaScale.bandwidth())
     .attr("fill", d => populationScale(d["%black"]))
 
-
   $gVis.append('line')
     .attr('class', 'boston-avg')
     .attr('x1', stopScale(1))
@@ -91,12 +97,12 @@ function drawChart(data) {
     .attr('y1', boundedHeight)
     .attr('y2', 0)
     .attr('stroke', 'rgba(0,0,0,0.8)')
-  
+
   $gVis.append('text')
     .attr('class', 'boston-avg')
     .text('Boston Average')
     .attr('x', stopScale(1.1))
-    .attr('y', boundedHeight/2)
+    .attr('y', boundedHeight / 2)
 
 
   // legend
@@ -117,10 +123,11 @@ function drawChart(data) {
     .enter().append("stop")
     .attr("offset", d => ((d.value - extent[0]) / (extent[1] - extent[0]) * 100) + "%")
     .attr("stop-color", d => d.color);
-  
-  const rectWidth = boundedWidth*0.4
-  const rectHeight = 30
-  $gLegend.attr('transform', `translate(${MARGIN.left}, ${height - rectHeight})`)
+
+  const rectWidth = isMobile ? boundedWidth * 0.8 : boundedWidth * 0.5
+  const rectHeight = isMobile ? 15 : 25
+  const offset = isMobile ? 20 : 50
+  $gLegend.attr('transform', `translate(${MARGIN.left}, ${MARGIN.top - rectHeight - offset})`)
   $gLegend.append("rect")
     .attr('class', 'legend-rect')
     .attr('x', boundedWidth / 2 - rectWidth / 2)
@@ -131,17 +138,17 @@ function drawChart(data) {
   $gLegend.append('text')
     .text('more Whites')
     .attr('x', boundedWidth / 2 - rectWidth / 2)
-    .attr('dy', -1)
+    .attr('y', rectHeight + 10)
     .attr('class', 'legend-text')
 
 
   $gLegend.append('text')
     .text('more Blacks')
     .attr('x', boundedWidth / 2 - rectWidth / 2 + rectWidth)
-    .attr('dy', -1)
+    .attr('y', rectHeight + 10)
     .attr('text-anchor', 'end')
     .attr('class', 'legend-text')
-    
+
 
 }
 
@@ -149,8 +156,8 @@ function drawChart(data) {
 function updateDimensions() {
   const h = window.innerHeight,
     w = window.innerWidth
-  const isMobile = w <= 600 ? true : false
-  height = isMobile ? Math.floor(h * 0.5) : Math.floor(h * 0.8);
+  isMobile = w <= 600 ? true : false
+  height = isMobile ? Math.floor(h * 0.9) : Math.floor(h * 0.95);
   width = $widthRef.node().offsetWidth
   boundedHeight = height - MARGIN.top - MARGIN.bottom
   boundedWidth = width - MARGIN.left - MARGIN.right

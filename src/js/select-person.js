@@ -16,7 +16,6 @@ const $gVis = $svg.select('.chart')
 const $scrollText = $div.select('.scroll__text')
 const $step = $scrollText.selectAll('.step')
 const $overallBoston = $step.select('.overall-boston')
-const $blackPop = $step.select('.black-pop')
 const $yourNeighborhoodChance = $step.select('.your-neighborhood-chance')
 const $tooltip = $graphic.select('.tool-tip')
 
@@ -107,11 +106,11 @@ const STEP = {
 
 const RACE_STEP = {
     'remind-race':() => {
-        $raceGVis.selectAll('.slope-circle')
-            .attr('opacity', 0.1)
+        // $raceGVis.selectAll('.slope-circle')
+        //     .attr('opacity', 0.1)
 
-        $raceGVis.selectAll('.slope-line')
-            .attr('opacity', 0.1)
+        // $raceGVis.selectAll('.slope-line')
+        //     .attr('opacity', 0.1)
     },
     'your-race-in-boston': () => {
         $raceGVis.selectAll('.slope-circle')
@@ -120,59 +119,69 @@ const RACE_STEP = {
             .attr('opacity', 0.1)
 
         if (race === 'black'){
-            $raceGVis.select('#right-circle-2119')
+            $raceGVis.select('#black-circle-2119')
                 .attr('opacity', 1)
-                .attr('r', 5)
+                .attr('r', 8)
                 .style('stroke-width', 2)
         } else {
-            $raceGVis.select('#left-circle-2134')
+            $raceGVis.select('#white-circle-2134')
                 .attr('opacity', 1)
-                .attr('r', 5)
+                .attr('r', 8)
                 .style('stroke-width', 2)
         }
     }, 
     'if-another':() => {
         $raceGVis.selectAll('.slope-circle')
             .attr('opacity', 0.1)
+            .attr('r', 5)
+            .style('stroke-width', 1)
         $raceGVis.selectAll('.slope-line')
             .attr('opacity', 0.1)
 
         if (race === 'black'){
             $raceGVis.select('#slope-line-2119')
             .attr('opacity', 1)
-            $raceGVis.select('#right-circle-2119')
+            $raceGVis.select('#black-circle-2119')
             .attr('opacity', 1)
-                .attr('r', 5)
-            $raceGVis.select('#left-circle-2119')
+            $raceGVis.select('#white-circle-2119')
             .attr('opacity', 1)
-                .attr('r', 5)
+                .attr('r', 8)
                 .style('stroke-width', 2)
         } else {
             $raceGVis.select('#slope-line-2134')
             .attr('opacity', 1)
-            $raceGVis.select('#left-circle-2134')
+            $raceGVis.select('#white-circle-2134')
             .attr('opacity', 1)
-                .attr('r', 5)
-            $raceGVis.select('#right-circle-2134')
+            $raceGVis.select('#black-circle-2134')
             .attr('opacity', 1)
-                .attr('r', 5)
+                .attr('r', 8)
                 .style('stroke-width', 2)
         }
     }, 
     'more-black-area': () => {
         $raceGVis.selectAll('.slope-circle')
             .attr('opacity', 0.1)
+            .attr('r', 5)
+            .style('stroke-width', 1)
         $raceGVis.selectAll('.slope-line')
             .attr('opacity', 0.1)
         $raceGVis.select('#slope-line-2119').attr('opacity', 1)
-        $raceGVis.select('#left-circle-2119').attr('opacity', 1)
-        $raceGVis.select('#right-circle-2119').attr('opacity', 1)
-        $raceGVis.select('#slope-line-2126').attr('opacity', 1)
-        $raceGVis.select('#left-circle-2126').attr('opacity', 1)
-        $raceGVis.select('#right-circle-2126').attr('opacity', 1)
+        $raceGVis.select('#white-circle-2119').attr('opacity', 1)
+        $raceGVis.select('#black-circle-2119').attr('opacity', 1)
         $raceGVis.select('#slope-line-2121').attr('opacity', 1)
-        $raceGVis.select('#left-circle-2121').attr('opacity', 1)
-        $raceGVis.select('#right-circle-2121').attr('opacity', 1)
+        $raceGVis.select('#white-circle-2121').attr('opacity', 1)
+        $raceGVis.select('#black-circle-2121').attr('opacity', 1)
+    },
+    'mattapan':() => {
+      $raceGVis.selectAll('.slope-circle')
+            .attr('opacity', 0.1)
+            .attr('r', 5)
+            .style('stroke-width', 1)
+      $raceGVis.selectAll('.slope-line')
+            .attr('opacity', 0.1)
+      $raceGVis.select('#slope-line-2126').attr('opacity', 1)
+      $raceGVis.select('#white-circle-2126').attr('opacity', 1)
+      $raceGVis.select('#black-circle-2126').attr('opacity', 1)
     },
     'more-white-area': () => {
         $raceGVis.selectAll('.slope-circle')
@@ -182,11 +191,14 @@ const RACE_STEP = {
         $raceGVis.selectAll('.slope-line')
             .attr('opacity', 0.1)
         $raceGVis.select('#slope-line-2134').attr('opacity', 1)
-        $raceGVis.select('#left-circle-2134').attr('opacity', 1)
-        $raceGVis.select('#right-circle-2134').attr('opacity', 1)
+        $raceGVis.select('#white-circle-2134').attr('opacity', 1)
+        $raceGVis.select('#black-circle-2134').attr('opacity', 1)
         $raceGVis.select('#slope-line-2135').attr('opacity', 1)
-        $raceGVis.select('#left-circle-2135').attr('opacity', 1)
-        $raceGVis.select('#right-circle-2135').attr('opacity', 1)
+        $raceGVis.select('#white-circle-2135').attr('opacity', 1)
+        $raceGVis.select('#black-circle-2135').attr('opacity', 1)
+        $raceGVis.select('#slope-line-2129').attr('opacity', 1)
+        $raceGVis.select('#white-circle-2129').attr('opacity', 1)
+        $raceGVis.select('#black-circle-2129').attr('opacity', 1)
     },
     'explore-race':() => {
         $raceGVis.selectAll('.slope-circle')
@@ -209,7 +221,7 @@ function calculateStoppedChance() {
   d3.select('#conclude').style('display', 'block')
   resize()
   const raceName = race == "black" ? "Black" : "white"
-  $assignedPerson.html(`You are a ${raceName} resident living in ${selNeighborhood.split(", ")[0]}, ${selNeighborhood.split(", ")[1]}`)
+  $assignedPerson.html(`You are a <span class="white-underscore">${raceName}</span> resident living in <span class="white-underscore">${selNeighborhood.split(", ")[0]}, ${selNeighborhood.split(", ")[1]}</span>`)
   $overallBoston.style('opacity', 1)
   selData = dataset.filter(d => d.Name === selNeighborhood)
   black_pop = selData[0]["%black"]
@@ -221,10 +233,8 @@ function calculateStoppedChance() {
   // STEP[currentStep]()
 
   const higherOrLower = selData[0].stopped_per - 1 > 0 ? 'increase' : 'decrease'
-  $blackPop
-    .html(`However, since you live in ${selNeighborhood}, where ${Math.round(black_pop)}% of population is Black and ${Math.round(white_pop)}% of population is white...`)
   $yourNeighborhoodChance
-    .html(`...your chances of getting stopped ${higherOrLower} to <span class='selected-neighborhood'>${Math.round(selData[0].stopped_per* 100) / 100}%</span>.`)
+    .html(`However, since you live in ${selNeighborhood}, where ${Math.round(black_pop)}% of population is Black and ${Math.round(white_pop)}% of population is white, your chances of getting stopped by the police ${higherOrLower} to <span class='selected-neighborhood'>${Math.round(selData[0].stopped_per* 100) / 100}%</span>.`)
   $raceParagraph
     .html(`Now, let’s take your race into consideration. In some areas, being ${raceName} does affect your chance of being stopped by the police. `)
   $remindRace

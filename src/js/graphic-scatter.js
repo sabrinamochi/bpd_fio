@@ -20,7 +20,7 @@ const MARGIN = {
   top: 20,
   right: 10,
   bottom: 50,
-  left: 60
+  left: 30
 }
 let boundedWidth, boundedHeight;
 
@@ -75,7 +75,7 @@ function drawChart() {
     // .attr('transform', `rotate(-90)`)
     // .attr('y', 12)
     .attr('x', -10)
-    .attr('y', (d, i) => i * 15)
+    .attr('y', (d, i) => -MARGIN.top / 2 + i * 15)
   const xLabel = $gVis.append('text')
     .attr('class', 'label', 'x-label')
     .text('Crime Index')
@@ -156,11 +156,12 @@ function drawChart() {
         return;
       }
     })
-    .attr('x', d => xScale(d.crime) - 40)
+    .attr('x', d => xScale(d.crime) - 10)
     .attr('y', d => yScale(d.stopped_per) - 6)
-    .attr('font-size', 10)
+    .attr('font-size', 12)
     .attr('font-family', 'Helvetica')
     .attr('opacity', 0)
+    .attr('text-anchor', 'middle')
 }
 
 // const linearRegression = getLinearRegression()
@@ -257,7 +258,7 @@ function updateDimensions() {
   const h = window.innerHeight;
   const w = window.innerWidth;
   const isMobile = w <= 600 ? true : false
-  height = isMobile ? Math.floor(h * 0.4) : Math.floor(h * 0.6);
+  height = isMobile ? Math.floor(h * 0.6) : Math.floor(h * 0.7);
   width = $graphic.node().offsetWidth;
 
   boundedWidth = width - MARGIN.left - MARGIN.right

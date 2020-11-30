@@ -22,6 +22,7 @@ let height = 0,
     boundedWidth = 0, 
     boundedHeight = 0;
 
+let isMobile; 
 
 const xScale = d3.scaleBand()
 const yScale = d3.scaleLinear()
@@ -60,9 +61,11 @@ function drawChart(){
   yScale
     .domain([0, d3.max(dataset, d => d.number_of_fio_subjects)])
   
+  const callBottomAxis = isMobile ? d3.axisBottom(xScale).tickValues(['2006', '2008', '2010', '2012', '2014', '2016', '2018']) : d3.axisBottom(xScale)
+
   xAxis = $xAxis
     .attr('transform', `translate(${MARGIN.left}, ${MARGIN.top + boundedHeight})`)
-    .call(d3.axisBottom(xScale))
+    .call(callBottomAxis)
   yAxis = $yAxis
     .attr('transform', `translate(${MARGIN.left}, ${MARGIN.top})`)
     .call(d3.axisLeft(yScale).tickSize(-(boundedWidth)).ticks(5))
@@ -75,7 +78,7 @@ function drawChart(){
    yLabel
     .text(d => d)
     .attr('x', -35)
-    .attr('y', (d, i) => i * 12)
+    .attr('y', (d, i) => -MARGIN.top / 2 + i * 10)
   const xLabel = $gVis.append('text')
     .attr('class', 'label', 'x-label')
     .text('Year')
@@ -126,8 +129,8 @@ function drawChart(){
 function updateDimensions(){
   const h = window.innerHeight;
   const w = window.innerWidth;
-  const isMobile = w <= 600 ? true : false
-  height = isMobile ? Math.floor(h * 0.4) : Math.floor(h * 0.5);
+  isMobile = w <= 600 ? true : false
+  height = isMobile ? Math.floor(h * 0.6) : Math.floor(h * 0.5);
   width = $graphic.node().offsetWidth;
 }
 

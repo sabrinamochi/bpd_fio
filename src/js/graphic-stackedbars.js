@@ -20,6 +20,8 @@ let height = 0,
     boundedWidth = 0, 
     boundedHeight = 0;
 
+let isMobile;
+
 const popData = [
     {race: "Black",
     0: 0,
@@ -95,7 +97,7 @@ function drawChart(){
       .enter()
       .append('text')
         .attr('class', 'stacked-bar-legend')
-        .text(d => `${d.race}: ${Math.round((d[1]-d[0])*10000)/100}%`)
+        .text(d => isMobile ? `${d.race}` : `${d.race}: ${Math.round((d[1]-d[0])*10000)/100}%`)
         .attr('y', yScale('pop') + yScale.bandwidth() + 10)
         .attr('x', d => xScale(d[0]))
    const $stopBars = $gStop.selectAll('.stop-bars')
@@ -122,7 +124,7 @@ function drawChart(){
       .enter()
       .append('text')
         .attr('class', 'stacked-bar-legend')
-        .text(d => `${d.race}: ${Math.round((d[1]-d[0])*10000)/100}%`)
+        .text(d => isMobile ? `${d.race}` : `${d.race}: ${Math.round((d[1]-d[0])*10000)/100}%`)
         .attr('y', yScale('stop') + yScale.bandwidth() + 10)
         .attr('x', d => xScale(d[0]))
 
@@ -131,7 +133,7 @@ function drawChart(){
 function updateDimensions(){
   const h = window.innerHeight;
   const w = window.innerWidth;
-  const isMobile = w <= 600 ? true : false
+  isMobile = w <= 600 ? true : false
   height = isMobile ? Math.floor(h * 0.4) : Math.floor(h * 0.3);
   width = $graphic.node().offsetWidth;
   boundedWidth = width - MARGIN.left - MARGIN.right;

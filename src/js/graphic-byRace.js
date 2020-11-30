@@ -11,11 +11,13 @@ var $titles = $svg.select(".title")
 let height = 0,
   width = 0
 const MARGIN = {
-  top: 100,
+  top: 150,
   right: 10,
-  bottom: 60,
+  bottom: 30,
   left: 100
 }
+
+let isMobile;
 
 const config = {
   labelPositioning: {
@@ -48,6 +50,13 @@ function drawChart(data) {
     .domain([0, d3.max(data, d => d.per_white_stopped_within_whites)])
     .range([0, boundedWidth])
 
+  $gVis.append("g")
+    .attr('class', 'axis x-axis')
+    .attr("transform", `translate(0, ${boundedHeight})`)
+    .call(d3.axisBottom(xScale).tickSize(-boundedHeight).tickValues([2, 4, 6]).tickFormat(x => `${x}%`))
+    .selectAll("text")
+    .style("text-anchor", "middle")
+
   yScale
     .range([boundedHeight, 0])
     .domain(data.map(d => d.neighborhood))
@@ -73,22 +82,27 @@ function drawChart(data) {
     .attr("x2", MARGIN.left + boundedWidth).attr("y2", MARGIN.top + boundedHeight)
     .attr('stroke', 'rgba(0,0,0,0.5')
 
+  const circleLegnedXOffset = isMobile ? -40 : 0
   const circleLegendG = $gVis.append('g')
     .attr('class', 'circle-legend-group')
-    .attr('transform', `translate(${boundedWidth/2}, ${-MARGIN.top / 2})`)
+    .attr('transform', `translate(${circleLegnedXOffset}, ${-MARGIN.top / 2})`)
     .selectAll('.circle-legend')
     .data(['white', 'Black'])
-  circleLegendG .enter().append('text')
+  circleLegendG.enter().append('text')
     .text(d => d)
-    .attr('y', 10)
+    .attr('y', (d, i) => isMobile ? i * 20 + 5 : 10)
     .attr('x', (d, i) => {
-      if (i == 0) {
-        return -35
+      if (isMobile) {
+        return 5
       } else {
-        return 45
+        if (i == 0) {
+          return -35
+        } else {
+          return 45
+        }
       }
     })
-  circleLegendG .enter().append('circle')
+  circleLegendG.enter().append('circle')
     .attr('class', 'circle-legend')
     .attr('fill', d => {
       if (d == 'white') {
@@ -104,13 +118,17 @@ function drawChart(data) {
         return 'none'
       }
     })
-    .attr('cy', 5)
+    .attr('cy', (d, i) => isMobile ? i * 20 : 5)
     .attr('r', 5)
     .attr('cx', (d, i) => {
-      if (i == 0) {
-        return -40
+      if (isMobile) {
+        return 0
       } else {
-        return 40
+        if (i == 0) {
+          return -40
+        } else {
+          return 40
+        }
       }
     })
 
@@ -141,8 +159,8 @@ function drawChart(data) {
     .attr('stroke-width', 5)
   const radius = 5
   var leftSlopeCircle = $slopeGroups.append("circle")
-    .attr('class', 'slope-circle left-slope-circle')
-    .attr('id', d => `left-circle-${d.zip}`)
+    .attr('class', 'slope-circle white-slope-circle')
+    .attr('id', d => `white-circle-${d.zip}`)
     .attr("r", radius)
     .attr('cx', d => xScale(d.per_white_stopped_within_whites))
     .attr("cy", d => yScale(d.neighborhood))
@@ -176,12 +194,59 @@ function drawChart(data) {
     })
 
   var rightSlopeCircle = $slopeGroups.append("circle")
-    .attr('class', 'slope-circle right-slope-circle')
-    .attr('id', d => `right-circle-${d.zip}`)
+    .attr('class', 'slope-circle black-slope-circle')
+    .attr('id', d => `black-circle-${d.zip}`)
     .attr("r", radius)
     .attr('cx', d => xScale(d.per_black_stopped_within_blacks))
     .attr("cy", d => yScale(d.neighborhood))
     .attr('fill', d => populationScale(d['%black']))
+
+
+  // gradient legend
+  const colorData = [{
+      color: populationScale.range()[0],
+      value: populationScale.domain()[0]
+    },
+    {
+      color: populationScale.range()[1],
+      value: populationScale.domain()[1]
+    }
+  ]
+  var extent = d3.extent(colorData, d => d.value);
+  var defs = $svg.append("defs");
+  var linearGradient = defs.append("linearGradient").attr("id", "legendGradient");
+  linearGradient.selectAll("stop")
+    .data(colorData)
+    .enter().append("stop")
+    .attr("offset", d => ((d.value - extent[0]) / (extent[1] - extent[0]) * 100) + "%")
+    .attr("stop-color", d => d.color);
+
+  const rectWidth = isMobile ? boundedWidth * 0.8 : boundedWidth * 0.5
+  const rectHeight = isMobile ? 10 : 20
+  const offset = isMobile ? 5 : 10
+  const gLegend = $gVis.append('g')
+    .attr('class', 'legend');
+  gLegend.attr('transform', `translate(${boundedWidth - rectWidth}, ${-MARGIN.top / 2 - rectHeight / 2})`)
+  gLegend.append("rect")
+    .attr('class', 'legend-rect')
+    .attr('x', 0)
+    .attr("width", rectWidth)
+    .attr("height", rectHeight)
+    .style("fill", "url(#legendGradient)");
+
+  gLegend.append('text')
+    .text('more Whites')
+    .attr('y', rectHeight + 10)
+    .attr('class', 'legend-text')
+
+
+  gLegend.append('text')
+    .text('more Blacks')
+    .attr('x', rectWidth)
+    .attr('y', rectHeight + 10)
+    .attr('text-anchor', 'end')
+    .attr('class', 'legend-text')
+
 
   // var rightSlopeLabels = $slopeGroups.append("g")
   //   .attr("class", "slope-label slope-label-right")
@@ -228,7 +293,7 @@ function drawChart(data) {
 function updateDimensions() {
   const h = window.innerHeight,
     w = window.innerWidth
-  const isMobile = w <= 600 ? true : false
+  isMobile = w <= 600 ? true : false
   height = isMobile ? Math.floor(h * 0.9) : Math.floor(h * 0.95)
   width = $widthRef.node().offsetWidth
   boundedHeight = height - MARGIN.top - MARGIN.bottom
