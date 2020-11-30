@@ -23,6 +23,9 @@ const MARGIN = {
   left: 30
 }
 let boundedWidth, boundedHeight;
+let h = window.innerHeight;
+let w = window.innerWidth;
+let isMobile = w <= 600 ? true : false
 
 const xScale = d3.scaleLinear()
 const yScale = d3.scaleLinear()
@@ -156,7 +159,7 @@ function drawChart() {
         return;
       }
     })
-    .attr('x', d => xScale(d.crime) - 10)
+    .attr('x', d => xScale(d.crime) - 15)
     .attr('y', d => yScale(d.stopped_per) - 6)
     .attr('font-size', 12)
     .attr('font-family', 'Helvetica')
@@ -248,16 +251,16 @@ function setupScroller() {
   Stickyfill.add($graphic.node());
   scroller.setup({
       step: $step.nodes(),
-      offset: 0.5
+      offset: isMobile ? Math.floor(window.innerHeight * 0.5) + "px" : 0.5
     })
     .onStepEnter(handleStepEnter)
 
 }
 
 function updateDimensions() {
-  const h = window.innerHeight;
-  const w = window.innerWidth;
-  const isMobile = w <= 600 ? true : false
+  h = window.innerHeight;
+  w = window.innerWidth;
+  isMobile = w <= 600 ? true : false
   height = isMobile ? Math.floor(h * 0.6) : Math.floor(h * 0.7);
   width = $graphic.node().offsetWidth;
 

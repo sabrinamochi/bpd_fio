@@ -41,9 +41,12 @@ function handleStepExit({index, element, direction}){
 
 function setupScroller(){
     Stickyfill.add($scrollImg.node());
+    const h = window.innerHeight;
+    const w = window.innerWidth;
+    const isMobile = w <= 600 ? true : false
     scroller.setup({
         step: $step.nodes(),
-        offset: 0.8
+        offset: isMobile ? Math.floor(window.innerHeight * 0.5) + "px" : 0.8
     })
     .onStepEnter(handleStepEnter)
     .onStepExit(handleStepExit)
