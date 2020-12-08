@@ -4,43 +4,65 @@
 tablet = "(min-width: 768px) and (max-width: 979px)"
 phone = "(max-width: 767px)"
 
-.nav
+nav
     width inherit
-    margin auto
-
-.intro 
-    &__text
-        &__byline
-            color #fff
-            font-size 14px !important
-            line-height 150%
-
-#content
-    line-height 24px
-    p   
-        font-size 2rem 
+    margin auto 
+    #menuToggle
+        width fit-content
 
 #warren-scroll 
     position relative
+    .intro-container 
+        height 100vh
+        width 100%
+        position absolute
+        .intro 
+            position absolute
+            top 50%
+            left 50%
+            transform translate(-50%, -50%)
+            width 35%
+            background rgba(0,0,0,0.5)
+            text-align center
+            color rgba(255,255,255,1) 
+            padding 2rem 1.5rem
+            @media phone
+                width 80%
+            p
+                color rgba(255,255,255,1) 
+                line-height 1.2em
+            h1 
+                font-size 6rem
+                line-height 6rem
+                margin-top 0
+                @media phone
+                    font-size 4rem
+                    line-height 4rem
     .scroll__img
         height 100vh
         position sticky
         position -webkit-sticky
         top 0
         margin 0 auto
+        overflow hidden
         // width $column-width
         z-index -1
         img
             height 100%
             object-fit cover
-            -webkit-filter grayscale(80%)
-            filter grayscale(80%)
+            -webkit-filter grayscale(0%)
+            filter grayscale(0%)
+            transform scale(2.5)
+            @media phone
+                transform scale(1)
     .scroll__text
         max-width $scroll-column-width
         margin 0 auto
         position relative
     .step 
         height 100vh
+    #cold-night
+        margin-top 50%
         
     @media phone
         .scroll__img
@@ -262,6 +284,10 @@ phone = "(max-width: 767px)"
                 .legend-text
                     font-family $sans
                     font-size 12px
+                .byside-circle-legend
+                    font-size 12px
+                    @media phone
+                        font-size 10px
     .assigned-person
         margin-top 1em
         font-size 65px

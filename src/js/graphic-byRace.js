@@ -202,6 +202,28 @@ function drawChart(data) {
     .attr('fill', d => populationScale(d['%black']))
 
 
+  const mattapanWCx = d3.select('#white-circle-2126').attr('cx')
+  const mattapanWCy = d3.select('#white-circle-2126').attr('cy')
+  const mattapanBCx = d3.select('#black-circle-2126').attr('cx')
+  const mattapanBCy = d3.select('#black-circle-2126').attr('cy')
+  
+  $gVis.append('text')
+    .text('White')
+    .attr('class', 'byside-circle-legend')
+    .attr('x', mattapanWCx)
+    .attr('dx', radius + 2)
+    .attr('y', mattapanWCy)
+    .attr('dy', radius)
+
+   $gVis.append('text')
+    .text('Black')
+    .attr('class', 'byside-circle-legend')
+    .attr('x', mattapanBCx)
+    .attr('dx', - radius - 2)
+    .attr('y', mattapanBCy)
+    .attr('dy', radius)
+    .attr('text-anchor', 'end')
+
   // gradient legend
   const colorData = [{
       color: populationScale.range()[0],
@@ -233,6 +255,11 @@ function drawChart(data) {
     .attr("width", rectWidth)
     .attr("height", rectHeight)
     .style("fill", "url(#legendGradient)");
+
+  gLegend.append('text')
+    .text('Demographics')
+    .attr('y', -5)
+    .attr('class', 'legend-text')
 
   gLegend.append('text')
     .text('more Whites')
@@ -313,11 +340,7 @@ function init() {
     result = result.filter(d => +d.resident_employee_ratio >= 1)
 
     result.forEach(d => {
-      if (d.Name.split(", ")[1] === "Dorchester") {
-        d.neighborhood = `${d.Name.split(", ")[1]}(${d.Name.split(", ")[0]})`
-      } else {
-        d.neighborhood = `${d.Name.split(", ")[1]}`
-      }
+      d.neighborhood = `${d.Name.split(", ")[1]}`
       d.group1 == "white"
       d.group2 == "black"
 

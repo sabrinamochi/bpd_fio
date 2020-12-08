@@ -106,17 +106,23 @@ const STEP = {
 
 const RACE_STEP = {
     'remind-race':() => {
-        // $raceGVis.selectAll('.slope-circle')
-        //     .attr('opacity', 0.1)
+        $raceGVis.selectAll('.slope-circle')
+            .attr('opacity', 1)
+            .attr('r', 5)
+            .style('stroke-width', 1)
 
-        // $raceGVis.selectAll('.slope-line')
-        //     .attr('opacity', 0.1)
+        $raceGVis.selectAll('.slope-line')
+            .attr('opacity', 1)
+        $raceGVis.selectAll('.byside-circle-legend')
+          .attr('opacity', 1)
     },
     'your-race-in-boston': () => {
         $raceGVis.selectAll('.slope-circle')
             .attr('opacity', 0.1)
         $raceGVis.selectAll('.slope-line')
             .attr('opacity', 0.1)
+        $raceGVis.selectAll('.byside-circle-legend')
+          .attr('opacity', 0)
 
         if (race === 'black'){
             $raceGVis.select('#black-circle-2119')
@@ -137,6 +143,9 @@ const RACE_STEP = {
             .style('stroke-width', 1)
         $raceGVis.selectAll('.slope-line')
             .attr('opacity', 0.1)
+
+        $raceGVis.selectAll('.byside-circle-legend')
+          .attr('opacity', 0)
 
         if (race === 'black'){
             $raceGVis.select('#slope-line-2119')
@@ -171,6 +180,9 @@ const RACE_STEP = {
         $raceGVis.select('#slope-line-2121').attr('opacity', 1)
         $raceGVis.select('#white-circle-2121').attr('opacity', 1)
         $raceGVis.select('#black-circle-2121').attr('opacity', 1)
+
+        $raceGVis.selectAll('.byside-circle-legend')
+          .attr('opacity', 0)
     },
     'mattapan':() => {
       $raceGVis.selectAll('.slope-circle')
@@ -182,6 +194,9 @@ const RACE_STEP = {
       $raceGVis.select('#slope-line-2126').attr('opacity', 1)
       $raceGVis.select('#white-circle-2126').attr('opacity', 1)
       $raceGVis.select('#black-circle-2126').attr('opacity', 1)
+
+      $raceGVis.selectAll('.byside-circle-legend')
+          .attr('opacity', 0)
     },
     'more-white-area': () => {
         $raceGVis.selectAll('.slope-circle')
@@ -199,6 +214,9 @@ const RACE_STEP = {
         $raceGVis.select('#slope-line-2129').attr('opacity', 1)
         $raceGVis.select('#white-circle-2129').attr('opacity', 1)
         $raceGVis.select('#black-circle-2129').attr('opacity', 1)
+
+        $raceGVis.selectAll('.byside-circle-legend')
+          .attr('opacity', 0)
     },
     'explore-race':() => {
         $raceGVis.selectAll('.slope-circle')
@@ -207,6 +225,8 @@ const RACE_STEP = {
             .style('stroke-width', 1)
         $raceGVis.selectAll('.slope-line')
             .attr('opacity', 1)
+        $raceGVis.selectAll('.byside-circle-legend')
+          .attr('opacity', 1)
     }
 }
 

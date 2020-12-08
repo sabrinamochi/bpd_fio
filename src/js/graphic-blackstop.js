@@ -136,6 +136,13 @@ function drawChart(data) {
     .style("fill", "url(#legendGradient)");
 
   $gLegend.append('text')
+    .text('Demographics')
+    .attr('y', -5)
+    .attr('x', boundedWidth / 2 - rectWidth / 2)
+    .attr('class', 'legend-text')
+
+
+  $gLegend.append('text')
     .text('more Whites')
     .attr('x', boundedWidth / 2 - rectWidth / 2)
     .attr('y', rectHeight + 10)
@@ -176,12 +183,7 @@ function init() {
   loadData('shape_with_stops.csv').then(result => {
     dataset = result.filter(d => +d.resident_employee_ratio >= 1)
     dataset.map(d => {
-      if (d.Name.split(", ")[1] === "Dorchester") {
-        d.neighborhood = `${d.Name.split(", ")[1]}(${d.Name.split(", ")[0]})`
-      } else {
-        d.neighborhood = `${d.Name.split(", ")[1]}`
-      }
-
+      d.neighborhood = `${d.Name.split(", ")[1]}`
     })
     dataset.sort((a, b) => +b["stopped_per"] - (+a["stopped_per"]))
     resize()

@@ -1,12 +1,27 @@
 <div id='warren-scroll'>
+    <div class='intro-container'>
+        <div class='intro'>
+            <div class='intro__text'>
+                <h1 class='intro__text__hed'>{{doc.hed}}</h1>
+                <p class='intro__text__dek'>{{doc.sub}}</p>
+                <p class='intro__text__byline'>
+                    By <strong>{{meta.author.name}}</strong>
+                    </br>
+                    Illustrations by <strong>Szu Wei Chen</strong>
+                </p>
+
+                <time class='intro__text__time'>November 2020</time>
+            </div>
+        </div>
+    </div>
     <div class='scroll__img'>
         <img class='warren-img'>
     </div>
     <div class='scroll__text'>
         {{#each doc.warrenSteps}}
-            <div class='step' data-step='{{step}}'>
-                <p>{{text}}</p>
-            </div>
+        <div class='step' id= '{{step}}' data-step='{{step}}'>
+            <p>{{text}}</p>
+        </div>
         {{/each}}
     </div>
 </div>
