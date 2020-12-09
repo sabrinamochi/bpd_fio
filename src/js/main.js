@@ -7,8 +7,6 @@ import graphic from "./graphic";
 import graphicDeclined from "./graphic-declined";
 import graphicStackedBars from "./graphic-stackedbars";
 import graphicScatter from "./graphic-scatter";
-import graphicMap1 from "./graphic-map1";
-import graphicMap2 from "./graphic-map2";
 import selectPerson from "./select-person";
 import graphicBlackstop from "./graphic-blackstop";
 import graphicByRace from "./graphic-byRace";
@@ -26,8 +24,6 @@ function resize() {
     graphicDeclined.resize();
     graphicStackedBars.resize();
     graphicScatter.resize();
-    graphicMap1.resize();
-    graphicMap2.resize();
     selectPerson.resize();
     graphicBlackstop.resize();
     graphicByRace.resize()
@@ -63,8 +59,6 @@ function init() {
   graphicDeclined.init();
   graphicStackedBars.init();
   graphicScatter.init();
-  graphicMap1.init();
-  graphicMap2.init();
   selectPerson.init();
   graphicBlackstop.init();
   graphicByRace.init()

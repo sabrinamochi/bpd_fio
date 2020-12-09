@@ -9,6 +9,73 @@
 	<link rel="stylesheet" href="https://mediainnovation.camd.northeastern.edu/2020/css/skeleton.css">
 	<link rel="stylesheet" href="https://mediainnovation.camd.northeastern.edu/2020/css/normalize.css">
 	<link rel="stylesheet" href="https://mediainnovation.camd.northeastern.edu/2020/css/innovation20.css">
+	<style media="screen,print">
+		#g-stop-black-map-box,
+		#g-stop-black-map-box .g-artboard {
+			margin: 0 auto;
+		}
+
+		#g-stop-black-map-box p {
+			margin: 0;
+		}
+
+		#g-stop-black-map-box .g-aiAbs {
+			position: absolute;
+		}
+
+		#g-stop-black-map-box .g-aiImg {
+			position: absolute;
+			top: 0;
+			display: block;
+			width: 100% !important;
+		}
+
+		#g-stop-black-map-box .g-aiSymbol {
+			position: absolute;
+			box-sizing: border-box;
+		}
+
+		#g-stop-black-map-box .g-aiPointText p {
+			white-space: nowrap;
+		}
+
+		#g-stop-black-map-_1 {
+			position: relative;
+			overflow: hidden;
+		}
+
+		#g-stop-black-map-_1 p {
+			font-family: arial, helvetica, sans-serif;
+			line-height: 14px;
+			height: auto;
+			filter: alpha(opacity=100);
+			-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+			opacity: 1;
+			letter-spacing: 0em;
+			text-align: left;
+			color: rgb(38, 38, 38);
+			text-transform: none;
+			padding-bottom: 0;
+			padding-top: 0;
+			mix-blend-mode: normal;
+			font-style: normal;
+			position: static;
+		}
+
+		#g-stop-black-map-_1 .g-pstyle0 {
+			height: 14px;
+			text-align: center;
+		}
+
+		#g-stop-black-map-_1 .g-pstyle1 {
+			height: 14px;
+			text-align: right;
+		}
+
+		#g-stop-black-map-_1 .g-pstyle2 {
+			height: 14px;
+		}
+	</style>
 
 
 	{{> base/font}}
@@ -20,8 +87,6 @@
 	{{> base/header 'sticky'}}
 
 	<main id='content'>
-
-		{{> story/intro }}
 
 		<section class="warren">
 			{{> story/warren}}
@@ -48,19 +113,20 @@
 		</section>
 
 		<section class='map-section'>
-			{{> story/map1}}
-		</section>
-
-		<section class='map-section'>
-			{{> story/map2}}
+			{{> story/map}}
 		</section>
 
 		<section class='rhone'>
 			{{#each doc.rhone}}
-				<div>
-					<p>{{value}}</p>
-				</div>
+			<div>
+				<p>{{value}}</p>
+			</div>
 			{{/each}}
+			<div class='quote'>
+				<q>
+					We thought they're coming to kill us or even kidnap us.
+				</q>
+			</div>
 		</section>
 
 		<section class='select-person-section'>
@@ -69,10 +135,34 @@
 
 		<section id='conclude'>
 			{{#each doc.conclude}}
-				<div>
-					<p>{{value}}</p>
-				</div>
+			<div>
+				<p>{{value}}</p>
+			</div>
 			{{/each}}
+		</section>
+
+		<section id='method'>
+			<div>
+				<ul>
+					<li>The BPD FIO reports used in this story can be found <a href="https://data.boston.gov/dataset/boston-police-department-fio">here.</a></li>
+
+					<li>The datasets include direct encounters, investigative stops and non-contact observations. In this
+					analysis, I focus only on people who were stopped by the police in 2019.</li>
+
+					<li>Details of Warren’s story were based on <a href="https://www.universalhub.com/files/warren-ruling_0.pdf">this document.</a></li>
+
+					<li>My analysis only included “residential neighborhoods” in Boston. The residential neighborhoods were
+					defined by the ratio of the number of residents and employees.</li>
+
+					<li>People of Hispanic origin, including Black and white Hispanic people, were classified as Black and
+					white in the race column.</li>
+
+					<li>Details of how I cleaned the datasets can be found <a href="https://github.com/sabrinamochi/bpd_fio_data_analysis/blob/master/data-cleaning-in-general.ipynb">here.</a></li>
+
+					<li> Details of how I analyzed the datasets can be found <a href="https://github.com/sabrinamochi/bpd_fio_data_analysis/blob/master/data-analysis-in-general.ipynb">here.</a></li>
+
+				</ul>
+			</div>
 		</section>
 
 	</main>

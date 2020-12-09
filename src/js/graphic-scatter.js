@@ -18,9 +18,9 @@ let height = 0,
   width = 0;
 const MARGIN = {
   top: 20,
-  right: 10,
+  right: 40,
   bottom: 50,
-  left: 30
+  left: 40
 }
 let boundedWidth, boundedHeight;
 let h = window.innerHeight;
@@ -166,27 +166,6 @@ function drawChart() {
     .attr('opacity', 0)
     .attr('text-anchor', 'middle')
 }
-
-// const linearRegression = getLinearRegression()
-// const linearRegressionLine = ss.linearRegressionLine(linearRegression)
-// function regressionPoints() {
-//         const firstX = dataset[1].crime;
-//         const lastX = dataset.slice(-1)[0].crime;
-//         const xCoordinates = [firstX, lastX];
-
-//         return xCoordinates.map(d => ({
-//             x: d,   // We pick x and y arbitrarily, just make sure they match d3.line accessors
-//             y: linearRegressionLine(d)
-//         }));
-//         }
-// const lineGen = getLineGen(xScale, yScale);
-// $gVis.append('path')
-//     // .classed('regressionLine', true)
-//     .datum(regressionPoints())
-//     .attr('d', lineGen)
-//     .attr('stroke', 'black')
-//     .attr('stroke-width', 5)
-
 
 const scroller = scrollama()
 let currentStep = 'explain'

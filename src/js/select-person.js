@@ -239,6 +239,7 @@ function calculateStoppedChance() {
   $paragraph.style('display', 'block')
   d3.select('#by-race-conclusion').style('display', 'block')
   d3.select('#conclude').style('display', 'block')
+  d3.select("#method").style('display', 'block')
   resize()
   const raceName = race == "black" ? "Black" : "white"
   $assignedPerson.html(`You are a <span class="white-underscore">${raceName}</span> resident living in <span class="white-underscore">${selNeighborhood.split(", ")[0]}, ${selNeighborhood.split(", ")[1]}</span>`)

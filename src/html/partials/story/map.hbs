@@ -1,76 +1,11 @@
-<style media="screen,print">
-    #g-stop-black-map-box,
-    #g-stop-black-map-box .g-artboard {
-        margin: 0 auto;
-    }
 
-    #g-stop-black-map-box p {
-        margin: 0;
-    }
-
-    #g-stop-black-map-box .g-aiAbs {
-        position: absolute;
-    }
-
-    #g-stop-black-map-box .g-aiImg {
-        position: absolute;
-        top: 0;
-        display: block;
-        width: 100% !important;
-    }
-
-    #g-stop-black-map-box .g-aiSymbol {
-        position: absolute;
-        box-sizing: border-box;
-    }
-
-    #g-stop-black-map-box .g-aiPointText p {
-        white-space: nowrap;
-    }
-
-    #g-stop-black-map-_1 {
-        position: relative;
-        overflow: hidden;
-    }
-
-    #g-stop-black-map-_1 p {
-        font-family: arial, helvetica, sans-serif;
-        line-height: 14px;
-        height: auto;
-        filter: alpha(opacity=100);
-        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
-        opacity: 1;
-        letter-spacing: 0em;
-        text-align: left;
-        color: rgb(38, 38, 38);
-        text-transform: none;
-        padding-bottom: 0;
-        padding-top: 0;
-        mix-blend-mode: normal;
-        font-style: normal;
-        position: static;
-    }
-
-    #g-stop-black-map-_1 .g-pstyle0 {
-        height: 14px;
-        text-align: center;
-    }
-
-    #g-stop-black-map-_1 .g-pstyle1 {
-        height: 14px;
-        text-align: right;
-    }
-
-    #g-stop-black-map-_1 .g-pstyle2 {
-        height: 14px;
-    }
-</style>
-
-<div id='map2'>
+<div id='map'>
     <div class='map-paragraph'>
-        <p>
-            {{doc.map2}}
-        </p>
+        {{#each doc.map}}
+            <p>
+                {{value}}
+            </p>
+        {{/each}}
     </div>
     <div class='graphic-container'>
         <div class='graphic'>

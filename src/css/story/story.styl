@@ -129,7 +129,7 @@ nav
             padding 1rem 
             box-shadow 2px 2px 3px rgba(0,0,0,0.5)
 
-#map1, #map2
+#map
     .graphic-container
         .graphic
             position relative
@@ -176,55 +176,22 @@ nav
                         -webkit-transform translate(-50%, 50%)
                         -ms-transform translate(-50%, 50%)
                         transform translate(-50%, 50%)
-                   
-            // .small-map-one
-            //     grid-area sideOne 
-            //     justify-self start
-            // .small-map-two
-            //     grid-area sideTwo
-            //     justify-self start
-            //     align-self start
-            // div.legend-text   
-            //     position absolute
-            //     p
-            //         font-size 10px
-            //         margin 0
-            //         line-height 1.2
-            //         @media phone
-            //             font-size 8px
-            // table 
-            //     margin 0
-            //     border-collapse collapse
-            //     width 5rem
-            //     height 5rem
-            //     transform rotate(-45deg)
-            //     position absolute
-            //     top 0 
-            //     left 0
-            //     @media phone
-            //         width 2rem
-            //         height 2rem
-            // tbody 
-            //     display table-row-group
-            //     vertical-align middle
-            //     td
-            //         display table-cell
-            //         vertical-align inherit
-            //         border-color #ffffff
-            //         border-width 1px    
-                    
-            // .arrow
-            //     height fit-content
-            //     font-size 25px
-            //     cursor pointer
-            // .arrow-bounce
-            //     -webkit-animation bounce .3s infinite alternate;
-            //     -moz-animation bounce .3s infinite alternate;
-            //     animation bounce .5s infinite alternate;
-                    
-            //     @keyframes bounce {
-            //         to { transform: scale(1.2); }
-            //     }
+
+.rhone
+    .quote
+        margin 6rem auto
+        color #81A8AD
+        font-size 4rem
+        line-height 4.2rem
+        font-family "Lora", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif
+        font-style italic
+        font-weight 800
+        text-align center
+        @media phone
+            font-size 3rem
+            line-height 3.3rem
+         
+            
 .hidden
     display none           
 
@@ -307,7 +274,7 @@ nav
         display flex
         justify-content space-between
         max-width $column-width
-        margin 3rem auto
+        margin 5rem auto
         @media phone
             display grid
             justify-content center
@@ -330,6 +297,15 @@ nav
             background-color rgba(0,0,0,0.5)
             color rgba(255,255,255,1)
 
+#method
+    div 
+        border-top 1px solid rgba(0,0,0,0.2)
+        ul
+            margin-top 1rem
+            li
+                font-size 1.2rem
+                color rgba(0,0,0,0.5)
+
 .white-underscore 
     color white
     background-color rgba(0,0,0,0.9)
@@ -341,10 +317,7 @@ nav
         &__graphic
             top 0
 
-#by-race-conclusion
-    display none
-    
-#conclude
+#by-race-conclusion, #conclude, #method
     display none
     
 .step, .scroll__text
@@ -401,7 +374,7 @@ svg
     position: absolute
     visibility hidden
 
-#black, #suppor-fio, #declined, #map1, .rhone, #map2, #select-person, #large-black .paragraph, #stop-by-race .paragraph, #by-race-conclusion .paragraph, #conclude
+#black, #suppor-fio, #declined, .rhone, #map, #select-person, #large-black .paragraph, #stop-by-race .paragraph, #by-race-conclusion .paragraph, #conclude, #method
     max-width $column-width
     margin 0 auto
     @media phone
